@@ -1,0 +1,107 @@
+[
+  {
+    "id": "util_1",
+    "domain": "Utilities",
+    "question": "What is the current date and time?",
+    "answer": "The current date and time is April 2, 2026, at 18:34:05.",
+    "plan": [
+      {
+        "step": 1,
+        "agent": "Utilities",
+        "task": "Get the current date and time in JSON format.",
+        "tool": "current_date_time"
+      },
+      {
+        "step": 2,
+        "agent": "Utilities",
+        "task": "Convert the current time from JSON format to English text.",
+        "tool": "current_time_english"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "fmsr_1",
+    "domain": "FMSR",
+    "question": "What are the failure modes for a chiller?",
+    "answer": "The failure modes for a chiller include:\n\n1. Compressor Overheating: Failed due to normal wear and overheating.\n2. Heat Exchangers: Fans with degraded motor or worn bearing due to normal use.\n3. Evaporator water side fouling.\n4. Condenser water side fouling.\n5. Improper water side flow rate in the condenser.\n6. Excessive purge in the purge unit.\n7. Failed spring in the refrigerant operated control valve.",
+    "plan": [
+      {
+        "step": 1,
+        "agent": "FMSRAgent",
+        "task": "Retrieve the failure modes for the chiller asset.",
+        "tool": "get_failure_modes"
+      },
+      {
+        "step": 2,
+        "agent": "FMSRAgent",
+        "task": "Identify the sensors available for the chiller asset.",
+        "tool": "get_failure_mode_sensor_mapping"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "fmsr_2",
+    "domain": "FMSR",
+    "question": "What are the failure modes for an AHU (air handling unit)?",
+    "answer": "The failure modes for an AHU (air handling unit) are: \n\n1. Pressure Regulators Diaphragm failure\n2. Steam Heating Coils Air side fouling\n3. Belts or sheaves Wear\n4. Improper switch position\n5. Solenoid Valves Bound due to hardened grease",
+    "plan": [
+      {
+        "step": 1,
+        "agent": "FMSRAgent",
+        "task": "Retrieve the failure modes for the AHU.",
+        "tool": "get_failure_modes"
+      },
+      {
+        "step": 2,
+        "agent": "FMSRAgent",
+        "task": "Identify the sensors available for the AHU.",
+        "tool": "get_failure_mode_sensor_mapping"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "fmsr_3",
+    "domain": "FMSR",
+    "question": "For a chiller, which sensors can help monitor or detect 'Compressor Overheating'? List the relevant sensors and explain why.",
+    "answer": "To monitor or detect 'Compressor Overheating' in a chiller, the relevant sensors include:\n\n1. **Temperature Sensors**: These sensors measure the temperature of the compressor. An increase in temperature beyond normal operating levels can indicate overheating.\n\n2. **Pressure Sensors**: Monitoring the pressure in the refrigerant lines can help identify issues that may lead to overheating, such as high discharge pressure.\n\n3. **Vibration Sensors**: Excessive vibration can be a sign of mechanical issues within the compressor that may lead to overheating.\n\n4. **Current Sensors**: These sensors measure the electrical current drawn by the compressor. An increase in current can indicate that the compressor is working harder than normal, potentially leading to overheating.\n\nThese sensors are critical for early detection and prevention of compressor overheating, ensuring the chiller operates efficiently and reducing the risk of failure.",
+    "plan": [
+      {
+        "step": 1,
+        "agent": "FMSRAgent",
+        "task": "Get the failure modes for the chiller asset.",
+        "tool": "get_failure_modes"
+      },
+      {
+        "step": 2,
+        "agent": "FMSRAgent",
+        "task": "Get the list of sensors available for the chiller.",
+        "tool": "get_failure_mode_sensor_mapping"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "fmsr_4",
+    "domain": "FMSR",
+    "question": "What are the failure modes for a chiller, and what is the current time?",
+    "answer": "The failure modes for a chiller include: Compressor Overheating, Heat Exchangers Fans degradation, Evaporator Water side fouling, Condenser Water side fouling, Improper water side flow rate in the condenser, Excessive purge in the purge unit, and a failed spring in the Refrigerant Operated Control Valve. The current date and time is April 2, 2026, at 18:36:03 UTC.",
+    "plan": [
+      {
+        "step": 1,
+        "agent": "FMSRAgent",
+        "task": "Retrieve the failure modes for the chiller.",
+        "tool": "get_failure_modes"
+      },
+      {
+        "step": 2,
+        "agent": "Utilities",
+        "task": "Get the current date and time.",
+        "tool": "current_date_time"
+      }
+    ],
+    "status": "success"
+  }
+]
