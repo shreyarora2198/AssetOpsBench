@@ -1,3 +1,5 @@
 anthropic>=0.40.0
 groq
-dotenv
+python-dotenv
+pytest>=8.0.0
+ijson>=3.2.0

@@ -4,14 +4,17 @@ SkillAgent: the unified entry point for AssetOpsBench skill-augmented reasoning.
 
 Architecture:
     1. Planner   — LLM generates an ordered skill plan; heuristic fallback if unavailable.
-    2. Executor  — runs each skill with four efficiency optimizations:
+    2. Confidence evaluator — ``confidence_evaluator.should_invoke_deep_tsfm`` gates deep
+       TSFM inside ``root_cause_analysis`` when FMSR-proxy confidence is below θ
+       (``RCA_CONFIDENCE_THETA``; proposal Table~5 condition E).
+    3. Executor  — runs each skill with four efficiency optimizations:
                      (a) conditional execution  via skill.should_skip(context)
                      (b) early stopping         via should_stop flag or confidence threshold
                      (c) cost-aware skipping    if a cost budget is set
                      (d) knowledge injection    via get_knowledge() per skill
-    3. Skills    — atomic, reusable workflows in skills.py
-    4. Knowledge — targeted domain knowledge injected per skill in knowledge.py
-    5. Tools     — AssetOpsBench agent wrappers in tools.py
+    4. Skills    — atomic, reusable workflows in skills.py
+    5. Knowledge — plugins in knowledge.py (``get_knowledge``; disable with ``KNOWLEDGE_INJECTION=0`` for ablation C).
+    6. Tools     — AssetOpsBench agent wrappers in tools.py
 """
 
 import dotenv
@@ -56,6 +59,10 @@ Ordering rules:
   - For fault + work order: add "validate_failure", "work_order_generation" after RCA.
 
 Return ONLY a valid JSON array of skill names. No explanation, no markdown.
+
+For fault-diagnosis tasks, root_cause_analysis internally runs lightweight FMSR
+mapping then may invoke deep TSFM refinement when diagnosis confidence is below
+RCA_CONFIDENCE_THETA (env, default 0.8); do not add a separate skill for that.
 """
 
 
@@ -139,6 +146,7 @@ class SkillAgent:
         skipped_conditional = []   # should_skip() fired or over budget
         executed            = []   # skills that actually ran
         stopped_at          = None # skill that triggered early stop
+        skill_steps         = []   # per-skill trajectory (for JSONL logs)
         t0                  = time.time()
 
         n_skills = len(plan)
@@ -169,11 +177,19 @@ class SkillAgent:
                 logger.error(f"  ✗ '{skill_name}' raised: {e}", exc_info=True)
                 continue
  
-            context.update(result.get("output", {}))
+            out = result.get("output", {})
+            context.update(out)
             total_cost += skill["cost"]
             tool_calls += 1
             executed.append(skill_name)
- 
+            skill_steps.append(
+                {
+                    "skill": skill_name,
+                    "output_keys": sorted(out.keys()),
+                    "should_stop": bool(result.get("should_stop", False)),
+                }
+            )
+
             # confidence  = result.get("confidence", 0.5) TODO: add confidence to skill outputs?
             should_stop = result.get("should_stop", False)
             #logger.info(f"    confidence={confidence}")
@@ -198,22 +214,41 @@ class SkillAgent:
         if skipped_early_stop:
             logger.info(f"  ⊘ Not reached (early stop): {skipped_early_stop}")
  
-        return {
+        metrics = {
+            "plan":                  plan,
+            "tool_calls":            tool_calls,
+            "skills_executed":       executed,
+            "skills_skipped":        all_skipped,
+            "skipped_conditional":   skipped_conditional,
+            "skipped_early_stop":    skipped_early_stop,
+            "stopped_at":            stopped_at,
+            "skill_steps":           skill_steps,
+            "total_cost":            round(total_cost, 3),
+            "latency_s":             round(time.time() - t0, 3),
+            "diagnosis_confidence":  context.get("diagnosis_confidence"),
+            "deep_tsfm_invoked":     bool(context.get("deep_tsfm_invoked", False)),
+        }
+
+        payload = {
             "task":    task,
             "asset":   asset_id,
             "result":  context,
-            "metrics": {
-                "plan":                  plan,
-                "tool_calls":            tool_calls,
-                "skills_executed":       executed,
-                "skills_skipped":        all_skipped,
-                "skipped_conditional":   skipped_conditional,
-                "skipped_early_stop":    skipped_early_stop,
-                "stopped_at":            stopped_at,
-                "total_cost":            round(total_cost, 3),
-                "latency_s":             round(time.time() - t0, 3),
-            },
+            "metrics": metrics,
         }
+        if os.getenv("TRAJECTORY_LOG_PATH"):
+            from trajectory_log import append_trajectory_line, build_agent_trajectory
+
+            append_trajectory_line(
+                build_agent_trajectory(
+                    task=task,
+                    asset_id=asset_id,
+                    plan=plan,
+                    metrics=metrics,
+                    context=context,
+                    skill_steps=skill_steps,
+                )
+            )
+        return payload
  
 
     # ── Helpers ───────────────────────────────────────────────────────────────

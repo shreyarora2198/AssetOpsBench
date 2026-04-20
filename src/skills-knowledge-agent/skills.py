@@ -20,9 +20,12 @@ dotenv.load_dotenv()  # load .env file if present
 from tools import (
     get_sensor_data, get_asset_metadata,
     detect_anomaly, forecast_sensor,
-    map_failure, generate_work_order,
+    map_failure_with_meta,
+    score_diagnosis_confidence, deep_tsfm_refine_anomalies,
+    generate_work_order,
 )
 from knowledge import get_knowledge
+from confidence_evaluator import should_invoke_deep_tsfm, theta_from_env
 
 
 # ── LLM helper (gracefully degrades without API key) ─────────────────────────
@@ -128,13 +131,16 @@ def _metadata_skip(context: dict) -> bool:
 # ── Skill 3: Anomaly Detection ────────────────────────────────────────────────
 
 def anomaly_detection(asset_id: str, context: dict, task: str) -> dict:
-    """TSFM agent — detect anomalies in sensor readings."""
+    """Detect anomalies via profile limits + IQR (ML TSAD only in deep_tsfm_refine_anomalies)."""
+    knowledge = get_knowledge("anomaly_detection", task, context)
     if "sensor_data" not in context:
-        return {"output": {},  "should_stop": False}
+        lookback = knowledge.get("time_series_metadata", {}).get(
+            "default_lookback_days", 7
+        )
+        context["sensor_data"] = get_sensor_data(asset_id, lookback_days=lookback)
 
-    knowledge  = get_knowledge("anomaly_detection", task, context)
     thresholds = knowledge.get("sensor_thresholds")
-    result     = detect_anomaly(context["sensor_data"], thresholds)
+    result = detect_anomaly(context["sensor_data"], thresholds)
 
     severity = result.get("severity", "none")
 
@@ -167,7 +173,7 @@ def anomaly_detection(asset_id: str, context: dict, task: str) -> dict:
 
 
 def _anomaly_skip(context: dict) -> bool:
-    return "sensor_data" not in context
+    return False
 
 
 # ── Skill 4: Root Cause Analysis ──────────────────────────────────────────────
@@ -196,10 +202,29 @@ def root_cause_analysis(asset_id: str, context: dict, task: str) -> dict:
         anomaly = context["anomaly_analysis"]
 
     failure_modes = knowledge.get("failure_modes", [])
-    failure       = map_failure(anomaly, failure_modes, asset_id=asset_id)
-    severity      = anomaly.get("severity", "unknown")
+    sensor_data   = context["sensor_data"]
 
-    # llm enrichment: explain the root cause -- use groq (free) for now
+    meta = map_failure_with_meta(anomaly, failure_modes, asset_id=asset_id)
+    failure = meta["failure"]
+    confidence = score_diagnosis_confidence(anomaly, meta)
+
+    anomaly_def = knowledge.get("anomaly_definition")
+    theta = theta_from_env()
+    deep_invoked = False
+    if should_invoke_deep_tsfm(confidence, theta=theta):
+        anomaly = deep_tsfm_refine_anomalies(
+            asset_id,
+            sensor_data,
+            anomaly,
+            anomaly_definition=anomaly_def if isinstance(anomaly_def, dict) else None,
+        )
+        meta = map_failure_with_meta(anomaly, failure_modes, asset_id=asset_id)
+        failure = meta["failure"]
+        confidence = score_diagnosis_confidence(anomaly, meta)
+        deep_invoked = True
+
+    severity = anomaly.get("severity", "unknown")
+
     llm_out = _call_groq(
         system=(
             "You are a root cause analysis agent for industrial chillers. "
@@ -210,6 +235,8 @@ def root_cause_analysis(asset_id: str, context: dict, task: str) -> dict:
         user=(
             f"Asset: {asset_id}\n"
             f"Failure: {failure}\n"
+            f"Diagnosis confidence: {confidence:.2f}\n"
+            f"Deep TSFM refinement run: {deep_invoked}\n"
             f"Anomalies: {anomaly.get('anomaly_details', [])}\n"
             f"Failure library: {failure_modes}"
         ),
@@ -218,9 +245,13 @@ def root_cause_analysis(asset_id: str, context: dict, task: str) -> dict:
 
     return {
         "output": {
-            "failure":    failure,
-            "severity":   severity,
-            "rca_detail": enrichment,
+            "failure":               failure,
+            "severity":              severity,
+            "diagnosis_confidence":  round(confidence, 3),
+            "deep_tsfm_invoked":     deep_invoked,
+            "anomaly_analysis":      anomaly,
+            "anomalies_detected":    anomaly.get("anomalies_detected", False),
+            "rca_detail":            enrichment,
         },
         "should_stop": False,
     }
@@ -260,25 +291,35 @@ def validate_failure(asset_id: str, context: dict, task: str) -> dict:
 
 
 def _validate_skip(context: dict) -> bool:
-    # Skip if no failure was diagnosed
-    return context.get("failure", "unknown") == "unknown" or \
-           not context.get("anomalies_detected", True)
+    # Skip if no failure was diagnosed, or anomaly detection confirmed none
+    if context.get("failure", "unknown") == "unknown":
+        return True
+    if "anomalies_detected" in context and not context["anomalies_detected"]:
+        return True
+    return False
 
 
 # ── Skill 6: Forecasting ──────────────────────────────────────────────────────
 
 def forecasting(asset_id: str, context: dict, task: str) -> dict:
     """TSFM agent — predict future sensor values, flag if maintenance needed."""
-    knowledge     = get_knowledge("forecasting", task, context)
-    op_ranges     = knowledge.get("operating_ranges", {})
-    ts_meta       = knowledge.get("time_series_metadata", {})
-    horizon_days  = ts_meta.get("default_lookback_days", 7)
+    knowledge = get_knowledge("forecasting", task, context)
+    op_ranges = knowledge.get("operating_ranges", {})
+    ts_meta = knowledge.get("time_series_metadata", {})
+    horizon_days = ts_meta.get("default_lookback_days", 7)
+    lookback = ts_meta.get("default_lookback_days", 7)
+
+    if "sensor_data" not in context:
+        context["sensor_data"] = get_sensor_data(asset_id, lookback_days=lookback)
+    sensor_data = context["sensor_data"]
 
     # Pick the most operationally important sensor for this asset
-    sensors  = knowledge.get("sensor_metadata", {}).get("sensors", ["flow_rate_GPM"])
-    target   = sensors[0] if sensors else "flow_rate_GPM"
+    sensors = knowledge.get("sensor_metadata", {}).get("sensors", ["flow_rate_GPM"])
+    target = sensors[0] if sensors else "flow_rate_GPM"
 
-    forecast = forecast_sensor(asset_id, target, horizon_days=horizon_days)
+    forecast = forecast_sensor(
+        asset_id, target, horizon_days=horizon_days, sensor_data=sensor_data
+    )
 
     # Check forecast against operating ranges
     limits   = op_ranges.get(target, {})
@@ -372,7 +413,7 @@ SKILL_REGISTRY = {
         "fn":          anomaly_detection,
         "should_skip": _anomaly_skip,
         "cost":        0.7,
-        "description": "Detect sensor anomalies using TSFM agent. Requires data_retrieval first.",
+        "description": "Detect sensor anomalies (profile + IQR). Fetches IoT data if missing.",
     },
     "root_cause_analysis": {
         "fn":          root_cause_analysis,
@@ -390,7 +431,7 @@ SKILL_REGISTRY = {
         "fn":          forecasting,
         "should_skip": _forecasting_skip,
         "cost":        0.9,
-        "description": "Predict future sensor values and flag maintenance need (TSFM agent).",
+        "description": "Predict future sensor values (TSFM subprocess when IoT context is long enough).",
     },
     "work_order_generation": {
         "fn":          work_order_generation,

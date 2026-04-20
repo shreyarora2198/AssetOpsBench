@@ -45,7 +45,7 @@ else
   echo "⚠️ Database $COUCHDB_DBNAME does not exist. Creating..."
   curl -s -X PUT "$COUCHDB_URL/$COUCHDB_DBNAME"
 
-  echo "Uploading documents from $JSON_FILE..."
+  echo "Uploading documents from $OUTPUT_FILE..."
   curl -s -X POST "$COUCHDB_URL/$COUCHDB_DBNAME/_bulk_docs" \
     -H "Content-Type: application/json" \
     -d @"$OUTPUT_FILE"
