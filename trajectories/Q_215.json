@@ -1,0 +1,39 @@
+{
+  "id": 215,
+  "type": "TSFM",
+  "text": "Does TSFM support time series regression tasks or any model for forecasting with context length 1024?",
+  "answer": "TSFM does not support time series regression tasks as per the available task list. Additionally, there are no pre-trained TinyTimeMixer (TTM) models available with a context length of 1024. The available models have context lengths of 96 and 512. Therefore, TSFM does not support time series regression tasks and does not have a model for forecasting with a context length of 1024.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Check if TSFM supports time series regression tasks.",
+      "server": "TSFMAgent",
+      "tool": "get_ai_tasks",
+      "tool_args": {},
+      "response": "{\n  \"tasks\": [\n    {\n      \"task_id\": \"tsfm_integrated_tsad\",\n      \"task_description\": \"Time series Anomaly detection\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting\",\n      \"task_description\": \"Time series Multivariate Forecasting\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_finetune\",\n      \"task_description\": \"Finetuning of Multivariate Forecasting models\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_evaluation\",\n      \"task_description\": \"Evaluation of Forecasting models\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Check if there are any pre-trained TinyTimeMixer (TTM) models with a context length of 1024.",
+      "server": "TSFMAgent",
+      "tool": "get_tsfm_models",
+      "tool_args": {},
+      "response": "{\n  \"models\": [\n    {\n      \"model_id\": \"ttm_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model with context length 512\"\n    },\n    {\n      \"model_id\": \"ttm_energy_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_energy_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 512\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "Analyze the results from Task 1 and Task 2 to determine if TSFM supports time series regression tasks or any model for forecasting with context length 1024.",
+      "server": "none",
+      "tool": "none",
+      "tool_args": {},
+      "response": "A conclusion based on the results from Task 1 and Task 2.",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

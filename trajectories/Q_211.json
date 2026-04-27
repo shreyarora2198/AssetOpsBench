@@ -1,0 +1,19 @@
+{
+  "id": 211,
+  "type": "TSFM",
+  "text": "Find a model for energy forecasting.",
+  "answer": "The available pre-trained TinyTimeMixer (TTM) models for energy forecasting are \"ttm_energy_96_28\" and \"ttm_energy_512_96\", which are tuned on energy data with context lengths 96 and 512, respectively. These models can be used for energy forecasting.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List available pre-trained TinyTimeMixer (TTM) models for energy forecasting.",
+      "server": "TSFMAgent",
+      "tool": "get_tsfm_models",
+      "tool_args": {},
+      "response": "{\n  \"models\": [\n    {\n      \"model_id\": \"ttm_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model with context length 512\"\n    },\n    {\n      \"model_id\": \"ttm_energy_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_energy_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 512\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

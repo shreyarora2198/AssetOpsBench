@@ -1,0 +1,104 @@
+{
+  "id": 425,
+  "type": "Workorder",
+  "text": "How can I analyze anomalies across multiple KPIs to better diagnose the root cause of these issues?",
+  "answer": "To analyze anomalies across multiple KPIs and diagnose the root cause of issues, you can leverage time-series anomaly detection, which is a supported AI task. However, the execution of this task was hindered by errors in previous steps, primarily due to missing required fields and connection issues. \n\nTo successfully analyze anomalies, ensure that you can:\n1. Establish a connection to retrieve assets and their sensors.\n2. Retrieve historical data for the selected asset.\n3. Identify known failure modes for the asset and their mapping to sensors.\n4. Provide the necessary dataset path and target columns for time-series anomaly detection.\n\nOnce these prerequisites are met, you can utilize the time-series anomaly detection capability (task_id: \"tsfm_integrated_tsad\") to analyze anomalies across multiple KPIs and better understand the root cause of issues.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Identify the list of sites available for analysis.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Select a site and retrieve its assets.",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "For the first asset, list its available sensors.",
+      "server": "IoTAgent",
+      "tool": "sensors",
+      "tool_args": {},
+      "response": "Error executing tool sensors: 2 validation errors for sensorsArguments\nsite_name\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing\nasset_id\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 4,
+      "task": "Retrieve historical data for the selected asset.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "start": "2022-01-01",
+        "final": "{Utilities.current_date_time()}"
+      },
+      "response": "Error executing tool history: 2 validation errors for historyArguments\nsite_name\n  Field required [type=missing, input_value={'start': '2022-01-01', '...s.current_date_time()}'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing\nasset_id\n  Field required [type=missing, input_value={'start': '2022-01-01', '...s.current_date_time()}'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 5,
+      "task": "Identify known failure modes for the selected asset.",
+      "server": "FMSRAgent",
+      "tool": "get_failure_modes",
+      "tool_args": {},
+      "response": "Error executing tool get_failure_modes: 1 validation error for get_failure_modesArguments\nasset_name\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 6,
+      "task": "Determine the mapping between failure modes and sensors.",
+      "server": "FMSRAgent",
+      "tool": "get_failure_mode_sensor_mapping",
+      "tool_args": {},
+      "response": "Error executing tool get_failure_mode_sensor_mapping: 3 validation errors for get_failure_mode_sensor_mappingArguments\nasset_name\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing\nfailure_modes\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing\nsensors\n  Field required [type=missing, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 7,
+      "task": "Check if time-series anomaly detection is a supported AI task.",
+      "server": "TSFMAgent",
+      "tool": "get_ai_tasks",
+      "tool_args": {},
+      "response": "{\n  \"tasks\": [\n    {\n      \"task_id\": \"tsfm_integrated_tsad\",\n      \"task_description\": \"Time series Anomaly detection\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting\",\n      \"task_description\": \"Time series Multivariate Forecasting\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_finetune\",\n      \"task_description\": \"Finetuning of Multivariate Forecasting models\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_evaluation\",\n      \"task_description\": \"Evaluation of Forecasting models\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 8,
+      "task": "Run integrated time-series forecasting and anomaly detection on the historical data.",
+      "server": "TSFMAgent",
+      "tool": "run_integrated_tsad",
+      "tool_args": {
+        "timestamp_column": "timestamp",
+        "model_checkpoint": "ttm_96_28",
+        "false_alarm": 0.05,
+        "ad_model_type": "timeseries_conformal",
+        "n_calibration": 0.2,
+        "conditional_columns": null,
+        "id_columns": null,
+        "frequency_sampling": "15_minutes",
+        "autoregressive_modeling": true
+      },
+      "response": "Error executing tool run_integrated_tsad: 2 validation errors for run_integrated_tsadArguments\ndataset_path\n  Field required [type=missing, input_value={'timestamp_column': 'tim...ressive_modeling': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing\ntarget_columns\n  Field required [type=missing, input_value={'timestamp_column': 'tim...ressive_modeling': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/missing",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

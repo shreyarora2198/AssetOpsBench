@@ -1,0 +1,8 @@
+{
+  "id": 417,
+  "type": "Workorder",
+  "text": "Just notice an anomaly 'KPI Cooling Load above upper bound' happens for equipment CWC04009, can you recommend top three work orders to address this problem?",
+  "answer": "",
+  "trajectory": [],
+  "error": "litellm.InternalServerError: WatsonxException - litellm.Timeout: Connection timed out after None seconds."
+}

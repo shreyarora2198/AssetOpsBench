@@ -1,0 +1,29 @@
+{
+  "id": 205,
+  "type": "TSFM",
+  "text": "Is LSTM model supported in TSFM?",
+  "answer": "No, the results from TSFM do not indicate support for an LSTM model; the models listed appear to be related to \"ttm\" ( potentially a different model type or identifier), with variations in context length and tuning on specific data like energy.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Check if LSTM model is supported in TSFM",
+      "server": "TSFMAgent",
+      "tool": "get_tsfm_models",
+      "tool_args": {},
+      "response": "{\n  \"models\": [\n    {\n      \"model_id\": \"ttm_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model with context length 512\"\n    },\n    {\n      \"model_id\": \"ttm_energy_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_energy_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 512\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Analyze the result to determine if LSTM is supported",
+      "server": "none",
+      "tool": "none",
+      "tool_args": {},
+      "response": "Determination of whether LSTM is supported in TSFM",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

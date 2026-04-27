@@ -24,6 +24,9 @@ dependencies = [
     "pyyaml>=6.0",
     "litellm>=1.0",
     "python-dotenv>=1.0",
+    "datasets>=4.8.4",
+    "huggingface-hub>=1.4.1",
+    "matplotlib>=3.10.8",
 ]
 
 [project.scripts]

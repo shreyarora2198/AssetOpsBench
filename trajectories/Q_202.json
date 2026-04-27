@@ -1,0 +1,19 @@
+{
+  "id": 202,
+  "type": "TSFM",
+  "text": "What are time series pretrained models are available in system?",
+  "answer": "The available pre-trained time series models in the system are:\n\n1. `ttm_96_28`: Pretrained forecasting model with context length 96\n2. `ttm_512_96`: Pretrained forecasting model with context length 512\n3. `ttm_energy_96_28`: Pretrained forecasting model tuned on energy data with context length 96\n4. `ttm_energy_512_96`: Pretrained forecasting model tuned on energy data with context length 512\n\nThese models are available for use in the industrial asset operations system.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List available pre-trained time series models",
+      "server": "TSFMAgent",
+      "tool": "get_tsfm_models",
+      "tool_args": {},
+      "response": "{\n  \"models\": [\n    {\n      \"model_id\": \"ttm_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model with context length 512\"\n    },\n    {\n      \"model_id\": \"ttm_energy_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_energy_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 512\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

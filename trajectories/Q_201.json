@@ -1,0 +1,19 @@
+{
+  "id": 201,
+  "type": "TSFM",
+  "text": "What types of time series analysis are supported?",
+  "answer": "The supported types of time series analysis are: \n1. Time series Anomaly detection\n2. Multivariate Forecasting (including finetuning and evaluation of forecasting models).",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Determine the supported time series analysis tasks.",
+      "server": "TSFMAgent",
+      "tool": "get_ai_tasks",
+      "tool_args": {},
+      "response": "{\n  \"tasks\": [\n    {\n      \"task_id\": \"tsfm_integrated_tsad\",\n      \"task_description\": \"Time series Anomaly detection\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting\",\n      \"task_description\": \"Time series Multivariate Forecasting\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_finetune\",\n      \"task_description\": \"Finetuning of Multivariate Forecasting models\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_evaluation\",\n      \"task_description\": \"Evaluation of Forecasting models\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

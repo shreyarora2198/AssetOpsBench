@@ -1,0 +1,19 @@
+{
+  "id": 209,
+  "type": "TSFM",
+  "text": "Is any model with context length 96 supported in TSFM?",
+  "answer": "Yes, there are models with context length 96 supported in TSFM, specifically \"ttm_96_28\" and \"ttm_energy_96_28\".",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Check if any model with context length 96 is supported in TSFM.",
+      "server": "TSFMAgent",
+      "tool": "get_tsfm_models",
+      "tool_args": {},
+      "response": "{\n  \"models\": [\n    {\n      \"model_id\": \"ttm_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model with context length 512\"\n    },\n    {\n      \"model_id\": \"ttm_energy_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_energy_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 512\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

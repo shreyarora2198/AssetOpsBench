@@ -1,0 +1,19 @@
+{
+  "id": 208,
+  "type": "TSFM",
+  "text": "Is Time Series Classification supported in TSFM?",
+  "answer": "No, Time Series Classification is not supported in TSFM, as it is not listed among the available tasks. The available tasks include Time Series Anomaly Detection, Multivariate Forecasting, finetuning of Multivariate Forecasting models, and evaluation of Forecasting models.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Check if Time Series Classification is supported in TSFM",
+      "server": "TSFMAgent",
+      "tool": "get_ai_tasks",
+      "tool_args": {},
+      "response": "{\n  \"tasks\": [\n    {\n      \"task_id\": \"tsfm_integrated_tsad\",\n      \"task_description\": \"Time series Anomaly detection\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting\",\n      \"task_description\": \"Time series Multivariate Forecasting\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_finetune\",\n      \"task_description\": \"Finetuning of Multivariate Forecasting models\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_evaluation\",\n      \"task_description\": \"Evaluation of Forecasting models\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

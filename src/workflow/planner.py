@@ -46,6 +46,11 @@ Rules:
 - Use {{step_N}} as a placeholder when an argument depends on step N's result.
 - Dependencies use #S<N> notation (e.g., #S1, #S2). Use "None" if none.
 - Keep tasks specific and actionable.
+- For IoT sensor data, site lists, or asset metadata — use IoTAgent.
+- For failure modes, sensor-fault mappings, or fault diagnosis — use FMSRAgent.
+- For work orders, maintenance history, or anomaly events — use WOAgent.
+- For time series model listings or capabilities — use TSFMAgent with get_ai_tasks or get_tsfm_models only.
+- Only use run_tsfm_forecasting, run_tsad, run_integrated_tsad, run_tsfm_finetuning when the question explicitly asks to RUN a model on a specific data file.
 
 Question: {question}
 
@@ -60,11 +65,31 @@ _DEP_RE = re.compile(r"#Dependency(\d+):\s*(.+)")
 _OUTPUT_RE = re.compile(r"#ExpectedOutput(\d+):\s*(.+)")
 _DEP_NUM_RE = re.compile(r"#S(\d+)")
 
+_AGENT_ALIASES = {
+    "iot": "IoTAgent",
+    "iotagent": "IoTAgent",
+    "fmsr": "FMSRAgent",
+    "fmsragent": "FMSRAgent",
+    "tsfm": "TSFMAgent",
+    "tsfmagent": "TSFMAgent",
+    "wo": "WOAgent",
+    "woagent": "WOAgent",
+    "workorder": "WOAgent",
+    "utility": "Utilities",
+    "utilitiesagent": "Utilities",
+}
+
+def _normalize_agent(name: str) -> str:
+    known = {"IoTAgent", "FMSRAgent", "TSFMAgent", "Utilities", "WOAgent"}
+    cleaned = name.strip()
+    if cleaned in known:
+        return cleaned
+    return _AGENT_ALIASES.get(cleaned.lower(), cleaned)
 
 def parse_plan(raw: str) -> Plan:
     """Parse an LLM-generated plan string into a Plan object."""
     tasks = {int(m.group(1)): m.group(2).strip() for m in _TASK_RE.finditer(raw)}
-    agents = {int(m.group(1)): m.group(2).strip() for m in _AGENT_RE.finditer(raw)}
+    agents = {int(m.group(1)): _normalize_agent(m.group(2)) for m in _AGENT_RE.finditer(raw)}    
     tools = {int(m.group(1)): m.group(2).strip() for m in _TOOL_RE.finditer(raw)}
     deps_raw = {int(m.group(1)): m.group(2).strip() for m in _DEP_RE.finditer(raw)}
     outputs = {int(m.group(1)): m.group(2).strip() for m in _OUTPUT_RE.finditer(raw)}

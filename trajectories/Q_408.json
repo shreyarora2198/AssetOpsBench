@@ -1,0 +1,85 @@
+{
+  "id": 408,
+  "type": "Workorder",
+  "text": "Get the daily count of the events of alert, anomaly for the May 2020 for equipment CWC04009.",
+  "answer": "The task to get the daily count of alert and anomaly events for equipment CWC04009 in May 2020 failed due to connection issues with the data source and errors in agent configuration or dependencies. Therefore, the daily count of alert and anomaly events cannot be provided.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Get the asset_id for CWC04009 at site \"MAIN\".",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Fetch historical data for CWC04009 in May 2020.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "MAIN",
+        "asset_id": "{asset_id_of_CWC04009}",
+        "start": "2020-05-01",
+        "final": "2020-05-31"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "Analyze the historical data to count alert/anomaly events.",
+      "server": "TSFMAgent",
+      "tool": "run_integrated_tsad",
+      "tool_args": {
+        "dataset_path": "{historical_data_path}",
+        "timestamp_column": "timestamp",
+        "target_columns": [
+          "relevant_sensor_column"
+        ],
+        "model_checkpoint": "ttm_96_28",
+        "false_alarm": 0.05,
+        "ad_model_type": "timeseries_conformal",
+        "n_calibration": 0.2,
+        "conditional_columns": null,
+        "id_columns": null,
+        "frequency_sampling": "1_hour",
+        "autoregressive_modeling": true
+      },
+      "response": "{\n  \"error\": \"tsfm dependencies unavailable: No module named 'tsfm_public'\"\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 4,
+      "task": "Fetch historical data or events for CWC04009 in May 2020.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "{site_name_from_step_2}",
+        "asset_id": "{asset_id_from_step_3}",
+        "start": "2020-05-01",
+        "final": "2020-05-31"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 5,
+      "task": "Analyze the historical data to count alert and anomaly events daily.",
+      "server": "TSFMAgent or IoTAgent (depending on the nature of the data and events)",
+      "tool": "",
+      "tool_args": {},
+      "response": "",
+      "error": "Unknown agent 'TSFMAgent or IoTAgent (depending on the nature of the data and events)'. Registered agents: ['IoTAgent', 'Utilities', 'FMSRAgent', 'TSFMAgent', 'WOAgent']",
+      "success": false
+    }
+  ],
+  "error": null
+}

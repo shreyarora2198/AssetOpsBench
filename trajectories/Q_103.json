@@ -1,0 +1,21 @@
+{
+  "id": 103,
+  "type": "FMSA",
+  "text": "List all failure modes of asset Wind Turbine.",
+  "answer": "The failure modes of the asset \"Wind Turbine\" are: \n1. Blade Failure\n2. Gearbox Failure\n3. Bearing Failure\n4. Generator Failure\n5. Control System Failure\n6. Pitch System Failure\n7. Yaw System Failure\n8. Foundation Failure\n9. Tower Failure\n10. Electrical System Failure\n11. Hydraulic System Failure\n12. Brake System Failure\n13. Rotor Hub Failure\n14. Main Shaft Failure\n15. Lightning Strike Damage.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List all failure modes of the asset \"Wind Turbine\".",
+      "server": "FMSRAgent",
+      "tool": "get_failure_modes",
+      "tool_args": {
+        "asset_name": "Wind Turbine"
+      },
+      "response": "{\n  \"asset_name\": \"Wind Turbine\",\n  \"failure_modes\": [\n    \"Blade Failure\",\n    \"Gearbox Failure\",\n    \"Bearing Failure\",\n    \"Generator Failure\",\n    \"Control System Failure\",\n    \"Pitch System Failure\",\n    \"Yaw System Failure\",\n    \"Foundation Failure\",\n    \"Tower Failure\",\n    \"Electrical System Failure\",\n    \"Hydraulic System Failure\",\n    \"Brake System Failure\",\n    \"Rotor Hub Failure\",\n    \"Main Shaft Failure\",\n    \"Lightning Strike Damage\"\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

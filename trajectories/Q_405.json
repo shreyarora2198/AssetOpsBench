@@ -1,0 +1,51 @@
+{
+  "id": 405,
+  "type": "Workorder",
+  "text": "Get all the events of equipment CWC04009 for the June of 2020 and provide a summary based on the event group for work order, alert, and anomaly.",
+  "answer": "The task to retrieve and summarize events for equipment \"CWC04009\" for June 2020 could not be completed due to connection issues. The system was unable to establish a connection to the required database or service, resulting in errors for all steps. Therefore, it is not possible to provide a summary of events by group (work order, alert, and anomaly) for the specified equipment and time period.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List assets for a known site (e.g., \"MAIN\") to find \"CWC04009\".",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Retrieve historical data for \"CWC04009\" at \"MAIN\" for June 2020.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "MAIN",
+        "asset_id": "{asset_id_of_CWC04009_from_step1}",
+        "start": "2020-06-01",
+        "final": "2020-06-30"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "Retrieve historical data for \"CWC04009\" in June 2020.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "{site_name_from_step2}",
+        "asset_id": "{asset_id_of_CWC04009}",
+        "start": "2020-06-01",
+        "final": "2020-06-30"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

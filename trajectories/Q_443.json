@@ -1,0 +1,46 @@
+{
+  "id": 443,
+  "type": "Workorder",
+  "text": "Measure typical time gaps between alerts and the corrective work orders they precede for CWC04009 to refine the life-cycle maintenance timeline.",
+  "answer": "The task to measure typical time gaps between alerts and corrective work orders for CWC04009 could not be completed due to connection errors when attempting to retrieve asset information and sensor history from the system. As a result, it is not possible to refine the life-cycle maintenance timeline for CWC04009 at this time.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List all sites.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "List assets for a site (e.g., 'MAIN').",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "Check if CWC04009 is at 'MAIN' and retrieve its sensor history.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "MAIN",
+        "asset_id": "CWC04009",
+        "start": "2022-01-01",
+        "final": null
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

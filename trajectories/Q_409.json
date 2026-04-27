@@ -1,0 +1,56 @@
+{
+  "id": 409,
+  "type": "Workorder",
+  "text": "Get the daily count of alert, anomaly and work order event for the May 2020 for equipment CWC04009.",
+  "answer": "The task to get the daily count of alert, anomaly, and work order events for equipment CWC04009 in May 2020 could not be completed due to errors in identifying the asset and retrieving its historical data. The errors were caused by a failure to establish a connection to the required database, as indicated by the \"Max retries exceeded\" and \"No connection could be made\" messages. Therefore, the daily counts for the specified events are unavailable.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List all sites.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Identify the asset CWC04009.",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "Get historical data for CWC04009.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "MAIN",
+        "start": "2020-05-01",
+        "final": "2020-05-31",
+        "asset_id": "CWC04009"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 4,
+      "task": "Analyze the historical data to count alert, anomaly, and work order events daily.",
+      "server": "",
+      "tool": "",
+      "tool_args": {},
+      "response": "",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,29 @@
+{
+  "id": 213,
+  "type": "TSFM",
+  "text": "Find all models with context length 96.",
+  "answer": "The models with a context length of 96 are \"ttm_96_28\" and \"ttm_energy_96_28\".",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Retrieve the list of available pre-trained TinyTimeMixer (TTM) models.",
+      "server": "TSFMAgent",
+      "tool": "get_tsfm_models",
+      "tool_args": {},
+      "response": "{\n  \"models\": [\n    {\n      \"model_id\": \"ttm_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model with context length 512\"\n    },\n    {\n      \"model_id\": \"ttm_energy_96_28\",\n      \"model_checkpoint\": \"ttm_96_28\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 96\"\n    },\n    {\n      \"model_id\": \"ttm_energy_512_96\",\n      \"model_checkpoint\": \"ttm_512_96\",\n      \"model_description\": \"Pretrained forecasting model tuned on energy data with context length 512\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Filter the models to find those with a context length of 96.",
+      "server": "none",
+      "tool": "none",
+      "tool_args": {},
+      "response": "A list of TTM models with a context length of 96.",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

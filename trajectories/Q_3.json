@@ -1,0 +1,21 @@
+{
+  "id": 3,
+  "type": "IoT",
+  "text": "What assets can be found at the MAIN site?",
+  "answer": "The assets at the MAIN site cannot be retrieved due to a connection error. The system was unable to establish a connection to the required database, resulting in an error. Therefore, the list of assets at the MAIN site is currently unavailable.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Retrieve the list of assets for the MAIN site.",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

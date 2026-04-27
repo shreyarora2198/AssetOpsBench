@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "type": "IoT",
+  "text": "What IoT sites are available?",
+  "answer": "The available IoT site is \"MAIN\".",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Retrieve the list of available IoT sites.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

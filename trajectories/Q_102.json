@@ -1,0 +1,21 @@
+{
+  "id": 102,
+  "type": "FMSA",
+  "text": "List all failure modes of asset Chiller 6.",
+  "answer": "The failure modes of asset Chiller 6 are:\n1. Compressor Overheating: Failed due to Normal wear, overheating\n2. Heat Exchangers: Fans: Degraded motor or worn bearing due to Normal use\n3. Evaporator Water side fouling\n4. Condenser Water side fouling\n5. Condenser Improper water side flow rate\n6. Purge Unit Excessive purge\n7. Refrigerant Operated Control Valve Failed spring",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "List all failure modes of asset Chiller 6.",
+      "server": "FMSRAgent",
+      "tool": "get_failure_modes",
+      "tool_args": {
+        "asset_name": "Chiller 6"
+      },
+      "response": "{\n  \"asset_name\": \"Chiller 6\",\n  \"failure_modes\": [\n    \"Compressor Overheating: Failed due to Normal wear, overheating\",\n    \"Heat Exchangers: Fans: Degraded motor or worn bearing due to Normal use\",\n    \"Evaporator Water side fouling\",\n    \"Condenser Water side fouling\",\n    \"Condenser Improper water side flow rate\",\n    \"Purge Unit Excessive purge\",\n    \"Refrigerant Operated Control Valve Failed spring\"\n  ]\n}",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

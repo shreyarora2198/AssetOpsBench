@@ -1,0 +1,84 @@
+{
+  "id": 422,
+  "type": "Workorder",
+  "text": "After checking existing work orders, anomalies and alerts in May and June 2020 for Chiller 9 with equipment ID CWC04009, should I recommend a new work order or is it too early to decide for July 2020?",
+  "answer": "It's too early to decide on recommending a new work order for Chiller 9 (CWC04009) for July 2020 because the analysis of existing work orders, anomalies, and alerts for May and June 2020 could not be completed due to connection issues and data retrieval failures.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Get the list of sites.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Assume Chiller 9 is at site \"MAIN\", list its assets to confirm the asset ID.",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "MAIN"
+      },
+      "response": "Error executing tool assets: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "Retrieve the list of sensors for Chiller 9.",
+      "server": "IoTAgent",
+      "tool": "sensors",
+      "tool_args": {
+        "site_name": "MAIN",
+        "asset_id": "CWC04009"
+      },
+      "response": "Error executing tool sensors: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 4,
+      "task": "Get historical data for Chiller 9 for May and June 2020.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "MAIN",
+        "asset_id": "CWC04009",
+        "start": "2020-05-01",
+        "final": "2020-06-30"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 5,
+      "task": "Analyze the historical sensor data to check for anomalies or alerts.",
+      "server": "TSFMAgent",
+      "tool": "run_integrated_tsad",
+      "tool_args": {
+        "timestamp_column": "timestamp",
+        "target_columns": [
+          "sensor1",
+          "sensor2"
+        ],
+        "model_checkpoint": "ttm_96_28",
+        "false_alarm": 0.05,
+        "ad_model_type": "timeseries_conformal",
+        "n_calibration": 0.2,
+        "conditional_columns": null,
+        "id_columns": null,
+        "frequency_sampling": "1_hour",
+        "autoregressive_modeling": true,
+        "dataset_path": null
+      },
+      "response": "Error executing tool run_integrated_tsad: 1 validation error for run_integrated_tsadArguments\ndataset_path\n  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.12/v/string_type",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

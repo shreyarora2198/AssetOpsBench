@@ -1,0 +1,56 @@
+{
+  "id": 410,
+  "type": "Workorder",
+  "text": "Get all the events of equipment CWC04009 for the first week of June of 2020 and provide a summary based on the event group for work order event, alert, and anomaly.",
+  "answer": "The task to retrieve events for equipment CWC04009 for the first week of June 2020 and provide a summary based on the event group for work order event, alert, and anomaly could not be completed due to errors encountered during execution. Specifically, an error occurred when trying to list assets for the site \"MAIN\", and a connection error was experienced when attempting to retrieve the sensor history. As a result, it is not possible to provide a summary of events for the specified equipment and time period.",
+  "trajectory": [
+    {
+      "step": 0,
+      "task": "List all available sites.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 1,
+      "task": "List all available sites to potentially identify the site for CWC04009.",
+      "server": "IoTAgent",
+      "tool": "sites",
+      "tool_args": {},
+      "response": "{\n  \"sites\": [\n    \"MAIN\"\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "For the first site, list assets to check if CWC04009 exists there.",
+      "server": "IoTAgent",
+      "tool": "assets",
+      "tool_args": {
+        "site_name": "{step_1[0]}"
+      },
+      "response": "{\n  \"error\": \"unknown site {step_1[0]}\"\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 3,
+      "task": "If CWC04009 is found, retrieve its sensor history for the first week of June 2020.",
+      "server": "IoTAgent",
+      "tool": "history",
+      "tool_args": {
+        "site_name": "{step_1[0]}",
+        "asset_id": "CWC04009",
+        "start": "2020-06-01",
+        "final": "2020-06-07"
+      },
+      "response": "Error executing tool history: HTTPConnectionPool(host='localhost', port=5984): Max retries exceeded with url: /_session (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=5984): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}

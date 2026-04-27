@@ -1,0 +1,29 @@
+{
+  "id": 207,
+  "type": "TSFM",
+  "text": "Is Anomaly Detection supported in TSFM?",
+  "answer": "Yes, Anomaly Detection is supported in TSFM.",
+  "trajectory": [
+    {
+      "step": 1,
+      "task": "Check if Anomaly Detection is supported in TSFM",
+      "server": "TSFMAgent",
+      "tool": "get_ai_tasks",
+      "tool_args": {},
+      "response": "{\n  \"tasks\": [\n    {\n      \"task_id\": \"tsfm_integrated_tsad\",\n      \"task_description\": \"Time series Anomaly detection\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting\",\n      \"task_description\": \"Time series Multivariate Forecasting\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_finetune\",\n      \"task_description\": \"Finetuning of Multivariate Forecasting models\"\n    },\n    {\n      \"task_id\": \"tsfm_forecasting_evaluation\",\n      \"task_description\": \"Evaluation of Forecasting models\"\n    }\n  ]\n}",
+      "error": null,
+      "success": true
+    },
+    {
+      "step": 2,
+      "task": "Verify if 'tsfm_integrated_tsad' is in the list of supported tasks",
+      "server": "none",
+      "tool": "none",
+      "tool_args": {},
+      "response": "Confirmation that Anomaly Detection is supported",
+      "error": null,
+      "success": true
+    }
+  ],
+  "error": null
+}
