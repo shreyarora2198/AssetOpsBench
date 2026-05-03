@@ -1,0 +1,21 @@
+EVALUATION SUMMARY — Baseline Agent (gpt-4o-mini)
+ID     Score  Question
+------------------------------------------------------------
+101    80.0%  List all failure modes of asset Chiller.
+102    80.0%  List all failure modes of asset Chiller 6.
+103    40.0%  List all failure modes of asset Wind Turbine.
+106   100.0%  List all failure modes of Chiller 6 that can be de
+107   100.0%  List all failure modes of Chiller 6 that can be de
+108    80.0%  List all failure modes of Chiller 6 that can be de
+110     0.0%  Are there any failure modes of Chiller 6 that can 
+111   100.0%  List all sensors of Chiller 6 that are potentially
+112     0.0%   If compressor overheating occurs for Chiller 6, w
+113     0.0%   If Evaporator Water side fouling occurs for Chill
+115     0.0%  Purge unit of chiller 6 have possibility to excess
+116     0.0%  Generate a machine learning recipe for detecting o
+117    20.0%  When compressor motor of Chiller 6 fails, what is 
+118   100.0%  When power input of Chiller 6 drops, what is the p
+119    80.0%  When the Liquid Refrigerant Evaporator Temperature
+120     0.0%  I want to build an anomaly model for identifying a
+
+Average: 48.8%
