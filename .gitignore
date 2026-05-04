@@ -201,3 +201,7 @@ mcp/couchdb/sample_data/bulk_docs.json
 .env
 mcp/servers/tsfm/artifacts/tsfm_models/.venv312/
 NEXT_STEPS.md
+.venv312/
+*.swp
+eval_results/ablation_scored.csv
+eval_results/ablation_results.csv
