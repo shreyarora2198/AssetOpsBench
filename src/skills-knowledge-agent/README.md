@@ -1,4 +1,5 @@
 # SkillsAgent
+Standalone repo:  https://github.com/verammaz/SkillsAgent
 
 Skill-augmented, knowledge-aware agent for AssetOpsBench fault-diagnosis tasks.
 The agent plans a sequence of **skills**, injects targeted **domain knowledge**,
