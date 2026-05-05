@@ -13,7 +13,8 @@
 # ``USE_IOT_SUBPROCESS=1`` / ``USE_WO_SUBPROCESS=1`` / ``USE_TSFM_SUBPROCESS=1``
 # to enable (defaults on when ASSETOPS is set for TSFM as well).
 #
-# TSFM calls ``servers.tsfm.main`` (``run_tsfm_forecasting``, ``run_integrated_tsad``).
+# TSFM calls ``servers.tsfm.main`` (``run_tsfm_forecasting``, ``run_integrated_tsad``,
+# ``fetch_tsfm_catalog`` reads ``servers.tsfm.models`` static lists).
 # Requires ``tsfm_public``, model checkpoints, and PATH_TO_* vars in AssetOpsBench
 # ``.env``. For official TSFM scenario CSVs, set ``PATH_TO_DATASETS_DIR`` (see
 # ``tsfm_task_spec``) or place files under ``<repo>/data/tsfm_test_data/``.
@@ -318,6 +319,36 @@ def _use_tsfm_subprocess() -> bool:
     if not _assetops_repo_root():
         return False
     return os.getenv("USE_TSFM_SUBPROCESS", "1").lower() in ("1", "true", "yes")
+
+
+def fetch_tsfm_catalog() -> dict:
+    """Static TSFM task and model lists — same data as TSFM MCP ``get_ai_tasks`` / ``get_tsfm_models``.
+
+    Imports ``servers.tsfm.models`` (the MCP tools wrap these lists). We avoid
+    ``servers.tsfm.main`` here because it pulls ``mcp``/FastMCP, which may not be
+    installed in every SkillsAgent environment.
+
+    Requires ``servers`` importable (typically ``PYTHONPATH`` includes AssetOpsBench
+    ``src``).
+
+    Returns:
+        ``{"ai_tasks": [...], "models": [...]}`` with dict-shaped entries, or
+        ``{"ai_tasks": [], "models": [], "error": "<reason>"}`` on failure.
+    """
+    try:
+        from servers.tsfm import models as tsfm_models
+    except ImportError as exc:
+        return {"ai_tasks": [], "models": [], "error": f"import: {exc}"}
+
+    try:
+        tasks = getattr(tsfm_models, "_AI_TASKS", []) or []
+        models = getattr(tsfm_models, "_TSFM_MODELS", []) or []
+        return {
+            "ai_tasks": [dict(t) for t in tasks],
+            "models": [dict(m) for m in models],
+        }
+    except Exception as exc:
+        return {"ai_tasks": [], "models": [], "error": str(exc)}
 
 
 def _tsfm_effective_horizon(horizon_days: int) -> int:

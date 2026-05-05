@@ -3,7 +3,7 @@ name = "scenario-client"
 version = "0.1.0"
 description = "scenario server client"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.14"
 dependencies = [
     "httpx>=0.28.1",
     "load-dotenv>=0.1.0",

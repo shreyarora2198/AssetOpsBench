@@ -3,7 +3,8 @@ name = "AssetOpsBench"
 version = "0.1.0"
 description = "Asset operations benchmarking"
 readme = "README.md"
-requires-python = ">=3.12"
+# pyarrow (via mlflow) has no binary wheels on CPython 3.14 yet — sdists fail without Arrow C++.
+requires-python = ">=3.12,<3.14"
 dependencies = [
     "asyncpg>=0.31.0",
     "huggingface-hub>=0.35.3",
