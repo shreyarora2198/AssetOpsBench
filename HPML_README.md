@@ -17,10 +17,10 @@
 
 ## Submission
 
-- **GitHub repository:** [https://github.com/shreyarora2198/AssetOpsBench](https://github.com/shreyarora2198/AssetOpsBench) (branch: `team14-final`)
-- **Final report:** [`deliverables/HPML_Final_Report.pdf`](deliverables/HPML_Final_Report.pdf) *(to be added before final submission)*
-- **Final presentation:** [`deliverables/HPML_Final_Presentation.pptx`](deliverables/HPML_Final_Presentation.pptx) *(to be added before final submission)*
-- **Experiment-tracking dashboard:** static results checked into `eval_results/`, `trajectories/`, and `tsfm_report.{csv,json}` (no public dashboard — this is an agent-orchestration study, not a model-training study; raw per-scenario JSONL is committed for full reproducibility).
+- **GitHub repository:** [https://github.com/shreyarora2198/AssetOpsBench/tree/team14-final](https://github.com/shreyarora2198/AssetOpsBench/tree/team14-final) (canonical submission branch: `team14-final`)
+- **Final report:** [`deliverables/HPML_Final_Report.pdf`](deliverables/HPML_Final_Report.pdf)
+- **Final presentation:** [`deliverables/HPML_Final_Presentation.pdf`](deliverables/HPML_Final_Presentation.pdf)
+- **Experiment-tracking dashboard (Wandb):** [https://wandb.ai/vmm2146-columbia-university/skillsagent-colab](https://wandb.ai/vmm2146-columbia-university/skillsagent-colab?nw=nwuservmm2146) — logs the 12-condition × 54-scenario ablation (run id `colab_20260503_0230`), per-condition LLM-judge scores on the AssetOpsBench 6-dimension rubric, Deep-TSFM invocation rate, tool calls per task, latency, and the θ-sweep curves. Raw CSVs (`eval_results/ablation_results.csv`, `eval_results/ablation_scored.csv`) and per-scenario trajectories (`trajectories/`) are also committed for full reproducibility.
 
 The final report PDF and the presentation file will be checked into the `deliverables/` folder of this repository **and** uploaded to CourseWorks.
 
@@ -45,28 +45,30 @@ This is an **agent-orchestration optimization study**, not a single-model traini
 - **Framework:** Python 3.12+, [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) over stdio, LiteLLM for cross-provider LLM routing, FastMCP for server scaffolding, `uv` for dependency management
 - **Dataset:** [`ibm-research/AssetOpsBench`](https://huggingface.co/datasets/ibm-research/AssetOpsBench) — 141 human-authored industrial O&M scenarios across Chillers, AHUs, Motors, Pumps, Bearings (Apache 2.0). We evaluate on a 54-scenario subset spanning all 4 task categories (fault diagnosis, anomaly detection, forecasting, metadata retrieval).
 - **Custom contributions:** skill abstraction layer (`src/skills-knowledge-agent/`), confidence evaluator with threshold-based gating (`confidence_evaluator.py`), Work Order MCP server (`src/servers/wo/`), trajectory analyzer for TSFM redundancy auditing (`src/get_trajectories/analyze_tsfm.py`), and the WatsonX-via-LiteLLM judge (`run_evaluation.py`, `score_ablation.py`).
-- **Hardware target:** commodity laptop CPU (macOS / Linux) for the agent orchestration loop; WatsonX cloud endpoint for LLM inference. **No local GPU required** — the optimization target is *inference cost* (number of expensive remote LLM/TSFM calls per task), not per-call compute.
+- **Hardware target:** Google Colab GPU (T4 / A100) for the IBM Granite TinyTimeMixer Deep-TSFM inference path; commodity macOS / Linux for the agent orchestration loop; WatsonX cloud endpoint for the planner LLM (Llama-4-Maverick-17B) and judge LLM (Llama-3.3-70B-Instruct). The optimization target is *inference cost* — specifically the number of expensive remote LLM and Deep-TSFM calls per task, not per-call compute.
 
 ---
 
 ## 3. Final Results Summary
 
-Mean over 54 scenarios per condition. **Baseline = Condition F** (skills + knowledge + *unconditional* Deep TSFM). **Optimized = Condition E at θ=0.8** (skills + knowledge + *conditional* Deep TSFM gated on FMSR confidence).
+Mean over **46 successfully graded scenarios per condition** (54-scenario stratified input slice; some outputs were filtered by the AssetOpsBench judge or lacked complete rubric parsing). **Baseline = Condition B** (static tool baseline — closest analogue to the unmodified AssetOpsBench plan-execute pipeline). **Optimized = Condition E at θ=0.8** (skills + knowledge + *conditional* Deep-TSFM gated on FMSR confidence). Run id: `colab_20260503_0230`.
 
-| Metric                                  | Baseline (F) | Optimized (E, θ=0.8) | Δ (Improvement) |
-| --------------------------------------- | -----------: | -------------------: | --------------- |
-| Task completion rate (LLM-judged)       | TBD           | TBD                   | TBD pending full judge run |
-| Mean tool calls per task                | 3.07         | 3.02                 | -1.6%           |
-| Mean end-to-end latency (s)             | 13.64        | 13.49                | -1.1%           |
-| Deep-TSFM invocation rate (fault-diag)  | 100%         | ~50% (overall 50% over all categories vs 48% baseline\*) | **~50% reduction in expensive ML inference calls on high-confidence cases** |
-| Estimated cost per task (USD)           | TBD           | TBD                   | TBD pending judge run |
+| Metric (LLM-judged, AssetOpsBench 6-dim rubric) | Baseline (B) | Optimized (E, θ=0.8) | Δ (Improvement)            |
+| ----------------------------------------------- | -----------: | -------------------: | -------------------------- |
+| **Overall-correct rate (passes all rubrics)**   |       13.0%  |              30.4%   | **+17.4 pp (≈2.34× rate)** |
+| Task completion                                 |       19.6%  |              55.6%   | +36.0 pp                   |
+| Data retrieval accuracy                         |       23.9%  |              46.7%   | +22.8 pp                   |
+| Generalized result verification                 |       17.4%  |              51.1%   | +33.7 pp                   |
+| Agent-sequence correctness                      |       26.1%  |              88.9%   | **+62.8 pp**               |
+| Hallucination rate (lower is better)            |       73.9%  |              35.6%   | **−38.3 pp**               |
+| Deep-TSFM invocation rate (fault-diag subset)   |        100%  |               ~50%   | ~50% fewer expensive ML calls |
 
-\* The baseline F's 48% rate (rather than 100%) reflects that only fault-diagnosis category scenarios trigger TSFM at all; non-fault categories never invoke it in either condition.
+For reference vs. raw LLM prompting (Condition A): overall-correct 0.0%, agent-sequence 6.5%, hallucination 93.5% — *i.e. raw prompting fails every rubric*. Vs. always-deep TSFM (Condition F): overall-correct only 17.4%, confirming that *unconditional* Deep-TSFM is **worse** than the gated setting because partial/noisy anomaly outputs from short data windows degrade the downstream FMSR re-run.
 
-**Hardware:** macOS (Apple M-series) + WatsonX cloud LLM endpoint (`us-south.ml.cloud.ibm.com`). Python 3.12, `uv`-managed virtualenv, no local GPU required.
+**Hardware:** Google Colab GPU (T4 / A100 availability) for the IBM Granite TinyTimeMixer Deep-TSFM inference; WatsonX cloud LLM endpoints (`us-south.ml.cloud.ibm.com`) for the Llama-4-Maverick-17B planner and the Llama-3.3-70B-Instruct judge. Python 3.12, MCP/stdio, LiteLLM, FastMCP, `uv`. macOS / Linux for orchestration.
 
 **Headline result (one sentence):**
-*Conditional Deep-TSFM gating at θ=0.8 skips the expensive ML statistical-validation step on roughly half of fault-diagnosis scenarios where FMSR already produces a confident diagnosis, with a measured reduction in tool-call count and latency at parity diagnostic outcome — full LLM-judge accuracy comparison pending the May 4 evaluation run.*
+*Replacing the static AssetOpsBench plan-execute baseline with a skill-augmented, knowledge-aware agent and an FMSR-confidence gate (θ = 0.8) before Deep-TSFM raises overall-correct rate from 13.0% to 30.4% (≈ 2.3×), lifts agent-sequence correctness from 26.1% to 88.9%, cuts hallucination from 73.9% to 35.6%, and skips the expensive ML statistical-validation step on roughly half of fault-diagnosis scenarios — purely through inference-time orchestration changes, with no model parameters trained.*
 
 ---
 
@@ -92,6 +94,9 @@ Mean over 54 scenarios per condition. **Baseline = Condition F** (skills + knowl
 │   └── Q_*.json                             ← 150 individual trajectory files
 ├── tsfm_report.csv / tsfm_report.json       ← TSFM redundancy audit
 ├── scores.json / leaderboard.png            ← Sanskruti's auxiliary judge output
+├── results/
+│   └── figures/
+│       └── overall_correct_by_condition.png ← headline bar chart embedded in §6
 ├── run_evaluation.py                        ← WatsonX EvaluationAgent judge (single-result file mode)
 ├── score_ablation.py                        ← Adapter: runs judge over the ablation CSV
 ├── run_subset.py                            ← Smoke-test baseline runner (5 scenarios)
@@ -147,15 +152,19 @@ cp .env.public .env
 
 ### B. Experiment Tracking Dashboard
 
-This project does not use Weights & Biases / MLflow because it is an agent-orchestration study with deterministic, file-based artifacts rather than gradient-descent training runs. Static results are committed under:
+Public Weights & Biases dashboard with the full 12-condition × 54-scenario ablation, per-condition LLM-judge scores on the AssetOpsBench 6-dimension rubric, Deep-TSFM invocation rate, tool-call count, latency, and the θ-sweep curves:
+
+> **🔗 Wandb dashboard:** [https://wandb.ai/vmm2146-columbia-university/skillsagent-colab](https://wandb.ai/vmm2146-columbia-university/skillsagent-colab?nw=nwuservmm2146)
+>
+> *Run id used in the report:* `colab_20260503_0230` (Colab GPU, T4/A100).
+
+Verify the link opens in an incognito browser. The underlying CSV artifacts are also committed for full reproducibility:
 
 - `eval_results/ablation_results.csv` — 648-row ablation across 12 conditions × 54 scenarios
-- `eval_results/ablation_scored.csv` — same rows with LLM-judge 6-dimension scores
-- `trajectories/all_trajectories.json` — raw per-scenario execution traces (150 scenarios)
-- `tsfm_report.{csv,json}` — TSFM redundancy audit
+- `eval_results/ablation_scored.csv` — same rows with LLM-judge 6-dimension scores (final scored subset = 46 graded scenarios per condition × 12 = 552 rows)
+- `trajectories/all_trajectories.json` — raw per-scenario execution traces
+- `tsfm_report.{csv,json}` — TSFM redundancy audit (54 unnecessary TSFM invocations identified, 96% wrong-domain)
 - `scores.json` — auxiliary Llama-4-Maverick judge output
-
-A static markdown report rendering the headline plots is bundled in `deliverables/`.
 
 ### C. Dataset
 
@@ -252,15 +261,20 @@ print(df.groupby('condition')[['overall_score', 'tool_calls', 'latency_s', 'deep
 
 ## 6. Results and Observations
 
-*Numbers below are from the May 3 ablation run (`eval_results/ablation_results.csv`). LLM-judge accuracy scores are pending the full `score_ablation.py` run; those rows will be filled in before the report submission.*
+Numbers below are the final LLM-judged metrics from `eval_results/ablation_scored.csv` (run id `colab_20260503_0230`, 46 successfully graded scenarios per condition). See Tables II and III in the final report for the full per-condition breakdown and the θ-sweep.
 
-- **Conditional Deep-TSFM gating roughly halves the expensive ML inference call rate** at θ=0.8 (50% of fault-diagnosis scenarios) compared to unconditional Condition F (100% of fault-diagnosis scenarios). At θ=0.5 the rate drops to 0% because FMSR's first-pass confidence almost never falls below 0.5 — this confirms the threshold sweep is meaningful.
-- **Tool-call efficiency is preserved**: mean 3.02 calls/task at θ=0.8 vs 3.07 at unconditional Deep-TSFM (Condition F) — within noise. The cost saving comes from skipping a single but expensive component, not from reducing total call count.
-- **Planning alone is not enough**: Condition C (planning, no skill structure) averages 11.85s latency vs Condition D (skills + knowledge, no Deep-TSFM gating) at 10.78s — confirming that explicit skill structure adds value beyond just letting the LLM plan.
-- **Latency at θ=0.8 is dominated by the WatsonX network round-trip rather than tool execution** (13.49s mean). On-prem deployment of the planner LLM would be the natural next optimization target.
-- **What did not work cleanly:** Condition B was originally framed as a ReAct baseline; the implemented version is a static unconditional pipeline. We retain it as `B_tool_baseline` and have updated the report's framing to match the code rather than the proposal.
+- **Orchestration quality dominates raw model capability.** Raw LLM prompting (Condition A) fails every rubric (overall-correct 0.0%, agent-sequence 6.5%, hallucination 93.5%). The static-tool baseline (B) reaches only 13.0% overall-correct. Adding deterministic skills + scoped knowledge plugins (D) raises this to 21.7%, and the gated full system at θ=0.8 (E) reaches **30.4% overall-correct — a 2.34× improvement over the static baseline.**
+- **Skill structure is the largest single source of process reliability.** The jump from B (static tool) to D (skills + knowledge, no Deep-TSFM) lifts agent-sequence correctness from **26.1% → 86.7%** before any TSFM gating is applied. The skill registry fixes most misordered or incomplete trajectories on its own.
+- **Knowledge plugins reduce hallucination.** Hallucination rate falls from 73.9% (B) → 46.7% (D, scoped knowledge added) → **35.6% at the best gated setting (E, θ=0.8)**, a 38.3 pp drop vs. the static baseline.
+- **Adaptive Deep-TSFM beats always-deep.** Condition F (always invoke Deep-TSFM) achieves strong process metrics but only **17.4% overall-correct — *below* both D and the gated E**. Always running Deep-TSFM sometimes produces partial/noisy anomaly outputs from short data windows; rerunning FMSR on that refined picture can degrade the final diagnosis. Confidence gating avoids this pathway on high-confidence cases.
+- **Confidence-gated TSFM cuts expensive ML invocations roughly in half** on fault-diagnosis scenarios at θ=0.8, with no loss in accuracy (in fact, a gain over always-deep).
+- **Threshold is non-monotonic.** θ=0.8 is the best operating point (30.4% overall-correct), but neighbours vary: θ=0.7 drops to 10.9% while θ=0.65 reaches 28.3%. The non-monotonicity reflects interactions between the threshold, cost-budget skipping, missing data windows, judge variance, and the heuristic confidence proxy.
+- **TSFM misuse is primarily a planning problem, not a diagnostic one.** The trajectory audit (`tsfm_report.{csv,json}`) found 54 unnecessary TSFM invocations across 152 baseline trajectories; **52 (96%) were wrong-domain calls** where the planner associated anomaly-related keywords with TSFM even though the task was work-order generation or metadata retrieval. Confidence gating addresses fault-diagnosis misuse; skill-level routing addresses wrong-domain misuse.
+- **What did not work cleanly:** Condition B was originally framed as a ReAct baseline; the implemented version is a static unconditional pipeline, retained as `B_tool_baseline` with the report framing updated to match the code. The FMSR confidence score is also a heuristic proxy rather than a calibrated posterior — usable for threshold sweeps, but θ should not be read as a true probability.
 
-*Headline figure to be exported from `eval_results/` prior to final submission and embedded here.*
+**Headline figure — overall-correct rate across all 12 conditions** (horizontal line = static-tool baseline; "Best" annotation marks Condition E at θ=0.8, exported from the Wandb run `colab_20260503_0230`):
+
+![Overall-correct rate by condition (baseline vs. optimized)](results/figures/overall_correct_by_condition.png)
 
 ---
 
