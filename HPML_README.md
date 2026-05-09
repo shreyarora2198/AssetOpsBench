@@ -148,7 +148,9 @@ cp .env.public .env
 # (CouchDB defaults work out of the box with the bundled Docker compose)
 ```
 
-**System requirements:** Python 3.12+, Docker (for the IoT CouchDB), WatsonX account. **No GPU required** — TSFM model inference uses CPU-friendly TinyTimeMixer checkpoints; LLM inference is delegated to WatsonX cloud.
+**System requirements:** Python 3.12+, Docker (for the IoT CouchDB), WatsonX account. Deep-TSFM inference was run on Google Colab GPU (T4 / A100); the rest of the orchestration runs on commodity CPU.
+
+**Dependency manifests:** the project is `uv`-managed (`pyproject.toml` + `uv.lock` are the source of truth, and `uv sync` is the recommended install path). A pinned [`requirements.txt`](requirements.txt) is also committed at the repo root — it is exported from `uv.lock` (`uv export --format requirements-txt --no-hashes > requirements.txt`) and lists the exact versions used to produce the reported results, so reviewers can also reproduce the environment with plain `pip install -r requirements.txt` if they prefer.
 
 ### B. Experiment Tracking Dashboard
 
