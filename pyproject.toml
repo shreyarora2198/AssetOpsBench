@@ -43,6 +43,12 @@ dev = [
     "anyio>=4.9.0",
     "pytest-anyio>=0.0.0",
 ]
+# Used by Colab (`colab_setup.ipynb`) and local TSFM subprocesses: `uv sync --group tsfm`.
+tsfm = [
+    "torch>=2.2",
+    # transformers 5.x is required alongside project deps (`huggingface-hub>=1.4.1`); 4.x pins hub<1.0 and cannot resolve.
+    "transformers>=5",
+]
 
 [tool.uv]
 package = true
