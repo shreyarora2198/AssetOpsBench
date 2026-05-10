@@ -22,6 +22,7 @@
 - **Final report:** [`deliverables/HPML_Final_Report.pdf`](deliverables/HPML_Final_Report.pdf)
 - **Final presentation:** [`deliverables/HPML_Final_Presentation.pdf`](deliverables/HPML_Final_Presentation.pdf)
 - **Experiment-tracking dashboard (Wandb):** [https://wandb.ai/vmm2146-columbia-university/skillsagent-colab](https://wandb.ai/vmm2146-columbia-university/skillsagent-colab?nw=nwuservmm2146) — logs the 12-condition × 54-scenario ablation (run id `colab_20260503_0230`), per-condition LLM-judge scores on the AssetOpsBench 6-dimension rubric, Deep-TSFM invocation rate, tool calls per task, latency, and the θ-sweep curves. Raw CSVs under **`skillsagent_out/colab_20260503_0230/`** (`ablation_results.csv`, judge outputs) and per-scenario trajectories (`trajectories/`) are committed for reproducibility alongside this README.
+- **Medium Article link:** [https://medium.com/@2003sans/rethinking-industrial-ai-agents-teaching-systems-when-to-stop-539ced0f614f](https://medium.com/@2003sans/rethinking-industrial-ai-agents-teaching-systems-when-to-stop-539ced0f614f)
 
 The final report PDF and the presentation file will be checked into the `deliverables/` folder of this repository **and** uploaded to CourseWorks.
 
