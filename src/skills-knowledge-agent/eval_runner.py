@@ -746,7 +746,6 @@ if __name__ == "__main__":
         task_bank = load_scenario_file(args.scenario_file)
     elif args.hf_limit is not None:
         from scenario_loader import load_hf_scenario_tasks
-
         task_bank = load_hf_scenario_tasks(limit=args.hf_limit)
     elif args.tsfm_report or os.getenv("TSFM_REPORT_CSV"):
         from scenario_loader import (
