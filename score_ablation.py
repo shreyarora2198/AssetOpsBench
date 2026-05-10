@@ -1,14 +1,16 @@
 """score_ablation.py — Run the WatsonX EvaluationAgent over ablation_results.csv.
 
-Reads eval_results/ablation_results.csv produced by src/skills-knowledge-agent/eval_runner.py,
-fetches characteristic_form per scenario_id from the AssetOpsBench HF dataset, and
-calls run_evaluation.EvaluationAgent on each row to attach 6-dimension scores.
+Reads ``skillsagent_out/.../ablation_results.csv`` produced by
+``src/skills-knowledge-agent/eval_runner.py`` (default input path below points at the
+final reported run folder), fetches characteristic_form per scenario_id from the
+AssetOpsBench HF dataset, and calls run_evaluation.EvaluationAgent on each row to attach
+6-dimension scores.
 
-Output: eval_results/ablation_scored.csv (resumable — re-running skips rows already scored).
+Output: sibling ``ablation_scored.csv`` next to the input (resumable — re-running skips rows already scored).
 
 Usage:
     uv run python score_ablation.py --limit 5         # smoke test, first 5 rows
-    uv run python score_ablation.py                   # full 649 rows
+    uv run python score_ablation.py                   # full 648 rows (12 conditions × 54 scenarios)
     uv run python score_ablation.py --condition E_full_system --theta 0.8   # subset
 """
 
@@ -122,8 +124,16 @@ def parse_task_id_to_int(tid: str) -> int | None:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="eval_results/ablation_results.csv")
-    parser.add_argument("--output", default="eval_results/ablation_scored.csv")
+    parser.add_argument(
+        "--input",
+        default="skillsagent_out/colab_20260503_0230/ablation_results.csv",
+        help="Path to ablation_results.csv from eval_runner",
+    )
+    parser.add_argument(
+        "--output",
+        default="skillsagent_out/colab_20260503_0230/ablation_scored.csv",
+        help="Where to write scored rows",
+    )
     parser.add_argument("--limit", type=int, default=None,
                         help="Only score the first N rows (after filters). For smoke tests.")
     parser.add_argument("--condition", default=None,
@@ -142,7 +152,7 @@ def main():
     in_path = Path(args.input)
     out_path = Path(args.output)
     if not in_path.exists():
-        print(f"ERROR: {in_path} not found. Did you copy the CSV into eval_results/?")
+        print(f"ERROR: {in_path} not found. Pass --input to your skillsagent_out/<run>/ablation_results.csv.")
         sys.exit(1)
 
     df = pd.read_csv(in_path)

@@ -203,5 +203,5 @@ mcp/servers/tsfm/artifacts/tsfm_models/.venv312/
 NEXT_STEPS.md
 .venv312/
 *.swp
-eval_results/ablation_scored.csv
-eval_results/ablation_results.csv
+skillsagent_out/ablation_scored.csv
+skillsagent_out/ablation_results.csv

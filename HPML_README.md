@@ -18,9 +18,10 @@
 ## Submission
 
 - **GitHub repository:** [https://github.com/shreyarora2198/AssetOpsBench/tree/team14-final](https://github.com/shreyarora2198/AssetOpsBench/tree/team14-final) (canonical submission branch: `team14-final`)
+- **SkillsAgent implementation README:** [`src/skills-knowledge-agent/README.md`](src/skills-knowledge-agent/README.md) — full usage, environment variables, ablation conditions, and grading pipeline (mirrors the standalone [SkillsAgent](https://github.com/verammaz/SkillsAgent) repo). **Final graded CSVs** for the HPML numbers below live under **`skillsagent_out/colab_20260503_0230/`** at this repository root; other dated folders under `skillsagent_out/` are exploratory runs.
 - **Final report:** [`deliverables/HPML_Final_Report.pdf`](deliverables/HPML_Final_Report.pdf)
 - **Final presentation:** [`deliverables/HPML_Final_Presentation.pdf`](deliverables/HPML_Final_Presentation.pdf)
-- **Experiment-tracking dashboard (Wandb):** [https://wandb.ai/vmm2146-columbia-university/skillsagent-colab](https://wandb.ai/vmm2146-columbia-university/skillsagent-colab?nw=nwuservmm2146) — logs the 12-condition × 54-scenario ablation (run id `colab_20260503_0230`), per-condition LLM-judge scores on the AssetOpsBench 6-dimension rubric, Deep-TSFM invocation rate, tool calls per task, latency, and the θ-sweep curves. Raw CSVs (`eval_results/ablation_results.csv`, `eval_results/ablation_scored.csv`) and per-scenario trajectories (`trajectories/`) are also committed for full reproducibility.
+- **Experiment-tracking dashboard (Wandb):** [https://wandb.ai/vmm2146-columbia-university/skillsagent-colab](https://wandb.ai/vmm2146-columbia-university/skillsagent-colab?nw=nwuservmm2146) — logs the 12-condition × 54-scenario ablation (run id `colab_20260503_0230`), per-condition LLM-judge scores on the AssetOpsBench 6-dimension rubric, Deep-TSFM invocation rate, tool calls per task, latency, and the θ-sweep curves. Raw CSVs under **`skillsagent_out/colab_20260503_0230/`** (`ablation_results.csv`, judge outputs) and per-scenario trajectories (`trajectories/`) are committed for reproducibility alongside this README.
 
 The final report PDF and the presentation file will be checked into the `deliverables/` folder of this repository **and** uploaded to CourseWorks.
 
@@ -37,7 +38,7 @@ Industrial operations and maintenance (O&M) agents in the AssetOpsBench benchmar
 This is an **agent-orchestration optimization study**, not a single-model training study. The "model" is a multi-agent system; we optimize *which* expensive components are invoked *when*.
 
 - **Agent stack:**
-  - **Planner**: LiteLLM-backed LLM (configurable: WatsonX `meta-llama/llama-4-maverick-17b-128e-instruct-fp8`, GPT-4o, Anthropic Claude, Groq Llama-3.3-70b)
+  - **Planner**: LiteLLM-backed LLM — default chain **watsonx → gemini → anthropic → groq** (override with `LLM_PROVIDER`); WatsonX default models include `meta-llama/llama-4-maverick-17b-128e-instruct-fp8` with fallbacks per `WATSONX_MODEL_ID`
   - **Skill executor**: deterministic Python orchestrator with conditional execution and early-stopping
   - **Knowledge plugins**: per-skill targeted retrieval (sensor metadata, failure-mode catalogue, operating ranges, maintenance policies)
   - **Tools**: 4 MCP servers — IoT (CouchDB sensor data), FMSR (curated failure modes + WatsonX LLM mapping), TSFM (IBM Granite TinyTimeMixer for forecasting & conformal anomaly detection), WO (work-order generation, predictive analytics)
@@ -86,9 +87,10 @@ For reference vs. raw LLM prompting (Condition A): overall-correct 0.0%, agent-s
 ├── deliverables/                            ← (to be added) final report + slides
 │   ├── HPML_Final_Report.pdf
 │   └── HPML_Final_Presentation.pptx
-├── eval_results/
-│   ├── ablation_results.csv                 ← 648 rows: 12 conditions × 54 scenarios
-│   └── ablation_scored.csv                  ← (generated) LLM-judge scores
+├── skillsagent_out/                         ← SkillsAgent `eval_runner.py` outputs (repo root; dated subfolders per Colab/local run)
+│   └── colab_20260503_0230/                 ← **Final reported run** (other `colab_*` dirs = exploratory)
+│       ├── ablation_results.csv             ← 648 rows: 12 condition variants × 54 scenarios
+│       └── …                                ← graded CSVs, trajectories — see SkillsAgent README
 ├── trajectories/                            ← raw per-scenario execution traces
 │   ├── all_trajectories.json
 │   └── Q_*.json                             ← 150 individual trajectory files
@@ -114,7 +116,7 @@ For reference vs. raw LLM prompting (Condition A): overall-correct 0.0%, agent-s
     │   ├── skills.py                        ← skill registry & executor
     │   ├── knowledge.py                     ← knowledge-plugin retrieval
     │   ├── confidence_evaluator.py          ← FMSR confidence → conditional Deep-TSFM
-    │   ├── eval_runner.py                   ← 5-condition × multi-θ ablation harness
+    │   ├── eval_runner.py                   ← Ablation harness: A,B,C,D,F + E with θ sweep (= **12** condition rows × scenario)
     │   ├── tools.py                         ← tool wrappers around MCP servers
     │   ├── agent.py / deep_agent.py         ← agent entry points
     │   └── tests/                           ← unit + smoke tests
@@ -144,11 +146,16 @@ uv sync
 
 # Configure secrets
 cp .env.public .env
-# Edit .env: set WATSONX_APIKEY, WATSONX_PROJECT_ID
+# Edit .env: set WATSONX_APIKEY, WATSONX_PROJECT_ID (required by run_evaluation.py / score_ablation.py).
+# **SkillsAgent code** (`src/skills-knowledge-agent/skills.py`) reads **WATSONX_API_KEY** — copy the same key:
+#   export WATSONX_API_KEY="$WATSONX_APIKEY"
+# or define both in `.env`. `src/skills-knowledge-agent/scripts/grade_assetops_metrics.py` copies KEY→APIKEY if only KEY is set.
 # (CouchDB defaults work out of the box with the bundled Docker compose)
 ```
 
 **System requirements:** Python 3.12+, Docker (for the IoT CouchDB), WatsonX account. Deep-TSFM inference was run on Google Colab GPU (T4 / A100); the rest of the orchestration runs on commodity CPU.
+
+**GPU / Colab:** To reproduce Deep-TSFM on Colab (same hardware class as the reported runs), open [`src/skills-knowledge-agent/colab_setup.ipynb`](src/skills-knowledge-agent/colab_setup.ipynb). It mounts Drive, clones this repository, installs TSFM dependencies, and runs `eval_runner` with outputs under the repo-root `skillsagent_out/` tree.
 
 **Dependency manifests:** the project is `uv`-managed (`pyproject.toml` + `uv.lock` are the source of truth, and `uv sync` is the recommended install path). A pinned [`requirements.txt`](requirements.txt) is also committed at the repo root — it is exported from `uv.lock` (`uv export --format requirements-txt --no-hashes > requirements.txt`) and lists the exact versions used to produce the reported results, so reviewers can also reproduce the environment with plain `pip install -r requirements.txt` if they prefer.
 
@@ -162,8 +169,8 @@ Public Weights & Biases dashboard with the full 12-condition × 54-scenario abla
 
 Verify the link opens in an incognito browser. The underlying CSV artifacts are also committed for full reproducibility:
 
-- `eval_results/ablation_results.csv` — 648-row ablation across 12 conditions × 54 scenarios
-- `eval_results/ablation_scored.csv` — same rows with LLM-judge 6-dimension scores (final scored subset = 46 graded scenarios per condition × 12 = 552 rows)
+- `skillsagent_out/colab_20260503_0230/ablation_results.csv` — 648-row ablation (12 condition variants × 54 scenarios)
+- `skillsagent_out/colab_20260503_0230/ablation_scored.csv` — same rows with LLM-judge 6-dimension scores when generated (final scored subset = 46 graded scenarios per condition × 12 = 552 rows)
 - `trajectories/all_trajectories.json` — raw per-scenario execution traces
 - `tsfm_report.{csv,json}` — TSFM redundancy audit (54 unnecessary TSFM invocations identified, 96% wrong-domain)
 - `scores.json` — auxiliary Llama-4-Maverick judge output
@@ -199,7 +206,7 @@ docker compose -f src/couchdb/docker-compose.yaml up -d
 
 # Run the full 12-condition × 54-scenario ablation
 uv run python src/skills-knowledge-agent/eval_runner.py
-# → writes eval_results/ablation_results.csv
+# → writes skillsagent_out/ablation_results.csv (default output dir = repo-root skillsagent_out/)
 ```
 
 To run the LLM judge over the ablation results:
@@ -210,17 +217,19 @@ uv run python score_ablation.py --limit 5
 
 # Full run (~45 min, costs <$1 in WatsonX tokens)
 uv run python score_ablation.py
-# → writes eval_results/ablation_scored.csv
+# → writes skillsagent_out/colab_20260503_0230/ablation_scored.csv (see defaults note below)
 ```
+
+**Defaults vs a fresh `eval_runner` rerun:** With no `--input` / `--output`, `score_ablation.py` reads `skillsagent_out/colab_20260503_0230/ablation_results.csv` and writes the sibling `ablation_scored.csv` (the committed final-run layout). A new `eval_runner.py` invocation writes `skillsagent_out/ablation_results.csv` at the repo root instead—use explicit `--input` / `--output` as in §G below, or pass different paths / a dated `--output-dir` from `eval_runner` and point `score_ablation` at that folder.
 
 ### F. Profiling
 
-The eval runner records per-scenario `tool_calls`, `latency_s`, `total_cost`, and `deep_tsfm_invoked` flags directly into `eval_results/ablation_results.csv`. Per-condition aggregates:
+The eval runner records per-scenario `tool_calls`, `latency_s`, `total_cost`, and `deep_tsfm_invoked` flags directly into `skillsagent_out/.../ablation_results.csv`. Per-condition aggregates:
 
 ```bash
 uv run python -c "
 import pandas as pd
-df = pd.read_csv('eval_results/ablation_results.csv')
+df = pd.read_csv('skillsagent_out/colab_20260503_0230/ablation_results.csv')
 print(df.groupby('condition')[['tool_calls', 'latency_s', 'deep_tsfm_invoked']].mean().round(2))
 "
 ```
@@ -244,16 +253,16 @@ cp .env.public .env  # edit with WATSONX_APIKEY, WATSONX_PROJECT_ID
 # 2. Start IoT data store
 docker compose -f src/couchdb/docker-compose.yaml up -d
 
-# 3. Run the 12-condition ablation
+# 3. Run the 12-condition ablation (writes skillsagent_out/ablation_results.csv by default)
 uv run python src/skills-knowledge-agent/eval_runner.py
 
-# 4. Score with the LLM judge
-uv run python score_ablation.py
+# 4. Score the fresh CSV from step 3 (required: bare score_ablation.py defaults to skillsagent_out/colab_20260503_0230/, not this path)
+uv run python score_ablation.py --input skillsagent_out/ablation_results.csv --output skillsagent_out/ablation_scored.csv
 
 # 5. Aggregate
 uv run python -c "
 import pandas as pd
-df = pd.read_csv('eval_results/ablation_scored.csv')
+df = pd.read_csv('skillsagent_out/ablation_scored.csv')
 df['overall_score'] = pd.to_numeric(df['overall_score'], errors='coerce')
 print(df.groupby('condition')[['overall_score', 'tool_calls', 'latency_s', 'deep_tsfm_invoked']].mean().round(2))
 "
@@ -263,7 +272,7 @@ print(df.groupby('condition')[['overall_score', 'tool_calls', 'latency_s', 'deep
 
 ## 6. Results and Observations
 
-Numbers below are the final LLM-judged metrics from `eval_results/ablation_scored.csv` (run id `colab_20260503_0230`, 46 successfully graded scenarios per condition). See Tables II and III in the final report for the full per-condition breakdown and the θ-sweep.
+Numbers below are the final LLM-judged metrics from `skillsagent_out/colab_20260503_0230/ablation_scored.csv` when generated from the judge pipeline (run id `colab_20260503_0230`, 46 successfully graded scenarios per condition). See Tables II and III in the final report for the full per-condition breakdown and the θ-sweep.
 
 - **Orchestration quality dominates raw model capability.** Raw LLM prompting (Condition A) fails every rubric (overall-correct 0.0%, agent-sequence 6.5%, hallucination 93.5%). The static-tool baseline (B) reaches only 13.0% overall-correct. Adding deterministic skills + scoped knowledge plugins (D) raises this to 21.7%, and the gated full system at θ=0.8 (E) reaches **30.4% overall-correct — a 2.34× improvement over the static baseline.**
 - **Skill structure is the largest single source of process reliability.** The jump from B (static tool) to D (skills + knowledge, no Deep-TSFM) lifts agent-sequence correctness from **26.1% → 86.7%** before any TSFM gating is applied. The skill registry fixes most misordered or incomplete trajectories on its own.
@@ -282,7 +291,7 @@ Numbers below are the final LLM-judged metrics from `eval_results/ablation_score
 
 ## 7. Notes
 
-- Source files live under `src/`, ablation outputs under `eval_results/`, raw trajectories under `trajectories/`, and team-internal scripts at the repo root (`run_evaluation.py`, `score_ablation.py`, `run_subset.py`).
+- Source files live under `src/`, SkillsAgent ablation outputs under **`skillsagent_out/`** (see `src/skills-knowledge-agent/README.md`), raw trajectories under `trajectories/`, and team-internal scripts at the repo root (`run_evaluation.py`, `score_ablation.py`, `run_subset.py`).
 - WatsonX credentials and CouchDB credentials are loaded from environment variables. See `.env.public` for the template.
 - The branch `team14-final` is the canonical submission branch. Feature branches (`baseline-setup`, `skills_knowledge`, `watsonx-eval`) remain in place to preserve per-author authorship history.
 
@@ -313,7 +322,7 @@ Numbers below are the final LLM-judged metrics from `eval_results/ablation_score
 - Every script was executed end-to-end by a human team member; output was sanity-checked against the input data and against existing repo functionality.
 - The `score_ablation.py` smoke test on 5 rows was run and the per-row JSON output was inspected manually before the full 648-row run.
 - The merged `team14-final` branch was verified by listing each contributed directory (`src/get_trajectories/`, `src/skills-knowledge-agent/`, `src/servers/wo/`, `run_evaluation.py`, `trajectories/`) and confirming all four authors' commits appear in `git log`.
-- All numbers reported in this README come from `eval_results/ablation_results.csv` aggregated by the team; AI-suggested narrative claims that were not backed by the data were removed.
+- All numbers reported in this README come from committed **`skillsagent_out/colab_20260503_0230/`** artefacts (`ablation_results.csv` / judge outputs) aggregated by the team; AI-suggested narrative claims that were not backed by the data were removed.
 
 By submitting this project, the team confirms that the analysis, interpretations, and conclusions are our own, and that any AI assistance is fully disclosed above. The same disclosure block appears as an appendix in the final report.
 
