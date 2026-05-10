@@ -305,7 +305,9 @@ Numbers below are the final LLM-judged metrics from `skillsagent_out/colab_20260
 - [ ] No, we did not use any AI tool.
 - [x] Yes, we used AI assistance as described below.
 
-**Tool(s) used:**
+#### AI Tool Use
+
+**Tools Used:**
 - **Claude (Anthropic)** — **Claude Code CLI** for repository edits and scripting, plus **conversational Claude sessions** for early ideation and for generating the final-report architecture figure from human-authored prompts.
 - **GitHub Copilot** (IDE integration) — in-editor explanations and navigation hints while exploring the upstream AssetOpsBench codebase.
 
