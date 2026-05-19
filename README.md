@@ -11,34 +11,16 @@
 **📘 Tutorials:** Learn more from our detailed guides —  
 [ReActXen IoT Agent (EMNLP 2025)](https://github.com/IBM/ReActXen/blob/main/docs/tutorial/ReActXen_IoT_Agent_EMNLP_2025.pdf) | 
 [FailureSensorIQ (NeurIPS 2025)](https://github.com/IBM/FailureSensorIQ) |
-[AssetOpsBench Lab (AAAI 2026)](https://ibm.github.io/AssetOpsBench/aaai_website/) |
+[AssetOpsBench Lab (AAAI 2026)](https://ibm.github.io/AssetOpsBench/aaaiwebsite/) |
 [Spiral (AAAI 2026)](https://github.com/IBM/SPIRAL) |
-[AssetOpsBench Technical Material](./docs/tutorial/AssetOpsBench_Technical_Material.pdf)
+[AssetOpsBench Technical Material](https://github.com/IBM/AssetOpsBench/blob/main/docs/tutorial/AssetOpsBench_Technical_Material.pdf)
 
 📄 [Paper](https://arxiv.org/pdf/2506.03828) | 🤗 [HF-Dataset](https://huggingface.co/datasets/ibm-research/AssetOpsBench) | 📢 [IBM Blog](https://research.ibm.com/blog/asset-ops-benchmark) | 🤗 [HF Blog](https://huggingface.co/blog/ibm-research/assetopsbench-playground-on-hugging-face) | [Contributors](#contributors)
 
 [![Kaggle](https://img.shields.io/badge/Kaggle-Benchmark-blue?logo=kaggle&logoColor=white&style=flat-square)](https://www.kaggle.com/benchmarks/ibm-research/asset-ops-bench)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Playground-orange?style=flat-square)](https://huggingface.co/spaces/ibm-research/AssetOps-Bench)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IBM/AssetOpsBench/blob/main/notebook/LLM_Agent.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/IBM/AssetOpsBench/blob/main-0.x/notebook/LLM_Agent.ipynb)
 </div>
-
----
-
-## 📢 Call for Scenario Contribution
-We are expanding **AssetOpsBench** to cover a broader range of industrial challenges. We invite researchers and practitioners to contribute new scenarios, particularly in the following areas:
-
-* **Asset Classes:** Turbines, HVAC Systems, Pumps, Transformers, CNC Machines, Robotics, Engines, and so on.
-* **Task Domains:** Prognostics and Health Management, Remaining Useful Life (RUL) estimation, or Root Cause Analysis (RCA), Diagnostic Analysis and Predictive Maintenance.
-
-**How to contribute:**
-1.  **Define** your scenario following our [Utterance Guideline](https://github.com/IBM/AssetOpsBench/blob/extra_scenarios/experimental_scenarios/utterance_design_guideline.md), 
-[Ground Truth Guideline](https://github.com/IBM/AssetOpsBench/blob/extra_scenarios/experimental_scenarios/ground_truth_creation_best_practice.md)
-
-1.  **Explore** the [Hugging Face dataset](https://huggingface.co/datasets/ibm-research/AssetOpsBench) as examples.
-3.  **Submit** a Pull Request or open an [Issue](https://github.com/IBM/AssetOpsBench/issues) with the tag `new-scenario`.
-4. **Contact us** via email if any question:
-   * Dhaval Patel ([pateldha@us.ibm.com](mailto:pateldha@us.ibm.com))
-   * Nianjun Zhou ([jzhou@us.ibm.com](mailto:jzhou@us.ibm.com))
 
 ---
 
@@ -50,19 +32,19 @@ We are expanding **AssetOpsBench** to cover a broader range of industrial challe
 ## 📑 Table of Contents
 1. [Announcements](#announcements)
 2. [Introduction](#introduction)
-3. [Datasets](#datasets-140-scenarios)
+3. [Datasets](#datasets)
 4. [AI Agents](#ai-agents)
 5. [Multi-Agent Frameworks](#multi-agent-frameworks)
-6. [System Diagram](#system-diagram)
-7. [Leaderboards](#leaderboards)
-8. [Docker Setup](#run-assetopsbench-in-docker)
-9. [Talks & Events](#talks--events)
-10. [External Resources](#external-resources)
+6. [Leaderboards](#leaderboards)
+7. [Talks & Events](#talks--events)
+8. [External Resources](#external-resources)
+9. [University Projects & Extensions](#university-projects--extensions)
+10. [Call for Scenario Contribution](#call-for-scenario-contribution)
 11. [Contributors](#contributors)
 
 ---
 
-## Announcements (Papers, Invited Talks, etc) 
+## Announcements 
 
 - 📊 **Dataset Update:** **AssetOpsBench** expanded to cover wider variety of 9 Asset classes (Chiller, AHU, Pump, Motor, Bearing, Engine, Rotors, Boilers, Turbine, etc.) and various Tasks (Remaining Useful Life, Fault Classification, Rule Monitoring, etc.) <br>![Hugging Face](https://img.shields.io/badge/HuggingFace-AssetOpsBench-yellow?logo=huggingface)
 [![Dataset](https://img.shields.io/badge/Dataset-ibm--research%2FAssetOpsBench-blue)](https://huggingface.co/datasets/ibm-research/AssetOpsBench)
@@ -72,7 +54,7 @@ We are expanding **AssetOpsBench** to cover a broader range of industrial challe
 [![Code](https://img.shields.io/badge/Code-IBM%2FSPIRAL-blue?logo=github)](https://github.com/IBM/SPIRAL)
 
 - 🎯 **AAAI-2026 Lab:** **From Inception to Productization: Hands-on Lab for the Lifecycle of Multimodal Agentic AI in Industry 4.0**  
-[![Website](https://img.shields.io/badge/Website-Agents_for_Industry_4.0_Applications-brightgreen)](https://ibm.github.io/AssetOpsBench/aaai_website/)
+[![Website](https://img.shields.io/badge/Website-Agents_for_Industry_4.0_Applications-brightgreen)](https://ibm.github.io/AssetOpsBench/aaaiwebsite/)
 ![Authors](https://img.shields.io/badge/Authors-Chathurangi_Shyalika,_Saumya_Ahuja,_Shuxin_Lin,_Ruwan_Wickramarachchi,_Dhaval_Patel,_Amit_Sheth-lightgrey)
 [![AAAI 2026 Slides](https://img.shields.io/badge/AAAI-Slides-red)](https://drive.google.com/file/d/16GaYxBQ2FsVqKpkKOU0PI_ZCTCsowenF/view?usp=sharing)
 
@@ -119,7 +101,7 @@ Designed for **maintenance engineers, reliability specialists, and facility plan
 
 ---
 
-## Datasets: 141 Scenarios
+## Datasets
 AssetOpsBench scenarios span multiple domains:  
 
 | Domain | Example Task |
@@ -141,7 +123,7 @@ Explore all scenarios [HF-Dataset](https://huggingface.co/datasets/ibm-research/
 - **TSFM Agent**: `forecasting`, `timeseries_anomaly_detection`  
 - **WO Agent**: `generate_work_order`  
 
-### Multi-Agent Frameworks (Blue Prints)
+### Multi-Agent Frameworks
 - **[MetaAgent](https://github.com/IBM/AssetOpsBench/tree/main/src/meta_agent)**: reAct-based single-agent-as-tool orchestration
 - **[AgentHive](https://github.com/IBM/AssetOpsBench/tree/main/src/agent_hive)**: plan-and-execute sequential workflow
 
@@ -162,18 +144,13 @@ Example: MetaAgent leaderboard
 
 ---
 
-## Run AssetOpsBench in Docker
-- Please Refer to the 
-- Pre-built Docker Images: `assetopsbench-basic` (minimal) & `assetopsbench-extra` (full)  
-- Conda environment: `assetopsbench`  
-- [Full setup guide](https://github.com/IBM/AssetOpsBench/tree/main/benchmark/README.md)  
+## Talks & Events
 
-```bash
-cd /path/to/AssetOpsBench
-chmod +x benchmark/entrypoint.sh
-docker-compose -f benchmark/docker-compose.yml build
-docker-compose -f benchmark/docker-compose.yml up
-```
+- **2026-05-10:** [NUS Seminar: AssetOpsBench Applications](https://events.comp.nus.edu.sg/view/25423)
+- **2025-10-03:** 2-Hour Workshop: *AI Agents and Their Role in Industry 4.0 Applications* (Host: NJIT ACM)
+- **2025-09-01:** [CODS 2025 Competition Launch – AssetOpsBench-Live](https://ikdd.acm.org/cods-2025/)
+- **2025-06-01:** AssetOpsBench v1.0 released with 141 industrial scenarios
+- **2025:** Multiple invited talks and accepted papers at NeurIPS, EMNLP, AAAI (see Announcements above)
 
 ---
 
@@ -182,6 +159,44 @@ docker-compose -f benchmark/docker-compose.yml up
 - 🤗 **HuggingFace**: [Scenario & Model Hub](https://huggingface.co/papers/2506.03828)  
 - 📢 **Blog**: [Insights, Tutorials, and Updates](https://research.ibm.com/blog/asset-ops-benchmark)  
 - 🎥 **Recorded Talks**: Link coming soon.
+
+---
+
+## University Projects & Extensions
+
+AssetOpsBench is being extended by university research groups exploring new asset classes, evaluation paradigms, and agentic architectures. To list your project, open a PR.
+
+- **Project Name** — short description (such as paper title). [Contributor Name](url), University · [repo](url)
+
+- **Project Name** — Prognostics & Health Management benchmark for MCP agents (rotating equipment, aero-engines, lithium-ion cells). [Contributor Name](https://github.com/handle), University of XYZ · [repo](https://github.com/contributor/phmforge)
+
+- **Internalizing MCP Tool Knowledge in Small LLMs via QLoRA Fine-Tuning** — HPML project using AssetOpsBench to fine-tune ~4B models to internalize MCP tool knowledge and reduce prompt schema overhead. [Ayal Yakobe](https://github.com/yakobeayal), Columbia University · [repo](https://github.com/YuvalShemla/hpml-2026-project)
+
+
+- **SPIN** — Structural LLM Planning via Iterative Navigation for Industrial Tasks. [Yusuke Ozaki](https://github.com/ozatamago), University at Albany · [paper](https://arxiv.org/abs/2605.14051) · [repo](https://github.com/ozatamago/AssetOpsBench/tree/UACap10)
+
+- **Synthetic Scenario Generation for Evaluation of Industry 4.0 Agents** — Automated Scenario Generation, Transformer Asset Integration, and Scenario Quality Evaluation. [Rohith Kanathur, Sagar Chethan Kumar](https://github.com/Rohith-Kanathur, https://github.com/Sagar-CK), Columbia University · [repo](https://github.com/Rohith-Kanathur/AssetOpsBench)
+
+- **AgentOpsBench** — High-throughput battery analytics MCP server with DNN prognostics (RUL prediction) and 3.3× latency optimization via parallel fetch, batching, and disk caching. [Siddharth Gowda, Rushin Bhatt, Aryaman Agrawal, Winston Li](https://github.com/siddharthgowda), Columbia University · [repo](https://github.com/siddharthgowda/AssetOpsBench)
+
+---
+
+## Call for Scenario Contribution
+We are expanding **AssetOpsBench** to cover a broader range of industrial challenges. We invite researchers and practitioners to contribute new scenarios, particularly in the following areas:
+
+* **Asset Classes:** Turbines, HVAC Systems, Pumps, Transformers, CNC Machines, Robotics, Engines, and so on.
+* **Task Domains:** Prognostics and Health Management, Remaining Useful Life (RUL) estimation, or Root Cause Analysis (RCA), Diagnostic Analysis and Predictive Maintenance.
+
+**How to contribute:**
+1.  **Define** your scenario following our [Utterance Guideline](docs/guideline/utterance_design_guideline.md), 
+[Ground Truth Guideline](docs/guideline/ground_truth_design_guideline.md)
+
+1.  **Explore** the [Hugging Face dataset](https://huggingface.co/datasets/ibm-research/AssetOpsBench) as examples.
+3.  **Submit** a Pull Request or open an [Issue](https://github.com/IBM/AssetOpsBench/issues) with the tag `new-scenario`.
+4. **Contact us** via email if any question:
+   * Dhaval Patel ([pateldha@us.ibm.com](mailto:pateldha@us.ibm.com))
+   * Nianjun Zhou ([jzhou@us.ibm.com](mailto:jzhou@us.ibm.com))
+
 
 ---
 
@@ -200,27 +215,139 @@ Thanks goes to these wonderful people ✨
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DhavalRepo18"><img src="https://github.com/DhavalRepo18.png?s=50" width="50px;" alt="DhavalRepo18"/><br /><sub><b>DhavalRepo18</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=DhavalRepo18" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=DhavalRepo18" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ShuxinLin"><img src="https://github.com/ShuxinLin.png?s=50" width="50px;" alt="ShuxinLin"/><br /><sub><b>ShuxinLin</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=ShuxinLin" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=ShuxinLin" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jtrayfield"><img src="https://github.com/jtrayfield.png?s=50" width="50px;" alt="jtrayfield"/><br /><sub><b>jtrayfield</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=jtrayfield" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=jtrayfield" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nianjunz"><img src="https://github.com/nianjunz.png?s=50" width="50px;" alt="nianjunz"/><br /><sub><b>nianjunz</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=nianjunz" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=nianjunz" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChathurangiShyalika"><img src="https://github.com/ChathurangiShyalika.png?s=50" width="50px;" alt="ChathurangiShyalika"/><br /><sub><b>ChathurangiShyalika</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=ChathurangiShyalika" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=ChathurangiShyalika" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/PUSHPAK-JAISWAL"><img src="https://github.com/PUSHPAK-JAISWAL.png?s=50" width="50px;" alt="PUSHPAK-JAISWAL"/><br /><sub><b>PUSHPAK-JAISWAL</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=PUSHPAK-JAISWAL" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=PUSHPAK-JAISWAL" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bradleyjeck"><img src="https://github.com/bradleyjeck.png?s=50" width="50px;" alt="bradleyjeck"/><br /><sub><b>bradleyjeck</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=bradleyjeck" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=bradleyjeck" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/ShuxinLin">
+          <img src="https://github.com/ShuxinLin.png?s=50" width="50px;" alt="ShuxinLin"/><br />
+          <sub><b>ShuxinLin</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=ShuxinLin" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/DhavalRepo18">
+          <img src="https://github.com/DhavalRepo18.png?s=50" width="50px;" alt="DhavalRepo18"/><br />
+          <sub><b>DhavalRepo18</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=DhavalRepo18" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/ChathurangiShyalika">
+          <img src="https://github.com/ChathurangiShyalika.png?s=50" width="50px;" alt="ChathurangiShyalika"/><br />
+          <sub><b>ChathurangiShyalika</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=ChathurangiShyalika" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/Dev-Scodes5">
+          <img src="https://github.com/Dev-Scodes5.png?s=50" width="50px;" alt="Dev-Scodes5"/><br />
+          <sub><b>Dev-Scodes5</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=Dev-Scodes5" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/DeveloperMindset123">
+          <img src="https://github.com/DeveloperMindset123.png?s=50" width="50px;" alt="DeveloperMindset123"/><br />
+          <sub><b>DeveloperMindset123</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=DeveloperMindset123" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/LGDiMaggio">
+          <img src="https://github.com/LGDiMaggio.png?s=50" width="50px;" alt="LGDiMaggio"/><br />
+          <sub><b>LGDiMaggio</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=LGDiMaggio" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/PUSHPAK-JAISWAL">
+          <img src="https://github.com/PUSHPAK-JAISWAL.png?s=50" width="50px;" alt="PUSHPAK-JAISWAL"/><br />
+          <sub><b>PUSHPAK-JAISWAL</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=PUSHPAK-JAISWAL" title="Code">💻</a>
+      </td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/florenzi002"><img src="https://github.com/florenzi002.png?s=50" width="50px;" alt="florenzi002"/><br /><sub><b>florenzi002</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=florenzi002" title="Code">💻</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=florenzi002" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kushwaha001"><img src="https://github.com/kushwaha001.png?s=50" width="50px;" alt="kushwaha001"/><br /><sub><b>kushwaha001</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=kushwaha001" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://mohit-gupta.me/"><img src="https://avatars.githubusercontent.com/u/52665879?v=4?s=50" width="50px;" alt="Mohit Gupta"/><br /><sub><b>Mohit Gupta</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=Mohit-15" title="Documentation">📖</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DeveloperMindset123"><img src="https://avatars.githubusercontent.com/u/109440738?v=4?s=50" width="50px;" alt="Ayan Das"/><br /><sub><b>Ayan Das</b></sub></a><br /><a href="https://github.com/IBM/AssetOpsBench/commits?author=DeveloperMindset123" title="Documentation">📖</a> <a href="https://github.com/IBM/AssetOpsBench/commits?author=DeveloperMindset123" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/bradleyjeck">
+          <img src="https://github.com/bradleyjeck.png?s=50" width="50px;" alt="bradleyjeck"/><br />
+          <sub><b>bradleyjeck</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=bradleyjeck" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/florenzi002">
+          <img src="https://github.com/florenzi002.png?s=50" width="50px;" alt="florenzi002"/><br />
+          <sub><b>florenzi002</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=florenzi002" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/jack-pfeifer">
+          <img src="https://github.com/jack-pfeifer.png?s=50" width="50px;" alt="jack-pfeifer"/><br />
+          <sub><b>jack-pfeifer</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=jack-pfeifer" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/jdsheehan">
+          <img src="https://github.com/jdsheehan.png?s=50" width="50px;" alt="jdsheehan"/><br />
+          <sub><b>jdsheehan</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=jdsheehan" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/jtrayfield">
+          <img src="https://github.com/jtrayfield.png?s=50" width="50px;" alt="jtrayfield"/><br />
+          <sub><b>jtrayfield</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=jtrayfield" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/kushwaha001">
+          <img src="https://github.com/kushwaha001.png?s=50" width="50px;" alt="kushwaha001"/><br />
+          <sub><b>kushwaha001</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=kushwaha001" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/nianjunz">
+          <img src="https://github.com/nianjunz.png?s=50" width="50px;" alt="nianjunz"/><br />
+          <sub><b>nianjunz</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=nianjunz" title="Code">💻</a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/sandeepkunkunuru">
+          <img src="https://github.com/sandeepkunkunuru.png?s=50" width="50px;" alt="sandeepkunkunuru"/><br />
+          <sub><b>sandeepkunkunuru</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=sandeepkunkunuru" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/srutanik">
+          <img src="https://github.com/srutanik.png?s=50" width="50px;" alt="srutanik"/><br />
+          <sub><b>srutanik</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=srutanik" title="Code">💻</a>
+      </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/thedgarg31">
+          <img src="https://github.com/thedgarg31.png?s=50" width="50px;" alt="thedgarg31"/><br />
+          <sub><b>thedgarg31</b></sub>
+        </a><br />
+        <a href="https://github.com/IBM/AssetOpsBench/commits?author=thedgarg31" title="Code">💻</a>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
     </tr>
   </tbody>
 </table>
-
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ---
-
